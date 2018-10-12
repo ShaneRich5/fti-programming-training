@@ -39,13 +39,7 @@ Run the installer and go through the following steps:
      to their docs here.
    * **NOTE**: It is safe to exit the install screen upon seeing this text otherwise the process is still working:
 
-####
-
 ![python download image](../../setup/Python Setup/website/assets/setup/MinicondaComplete.png)
-
-![python download image](../../setup/Python Setup/website/assets/setup/MinicondaInstallType.png)
-![python download image](../../setup/Python Setup/website/assets/setup/MinicondaInstallLocation.png)
-![python download image](../../setup/Python Setup/website/assets/setup/MinicondaInstallOptions.png)
 
 
 # Configuring PyCharm
@@ -69,8 +63,7 @@ for Markdown, Bash, and R although we will ignore them for now.
 
 
 ![python download image](../../setup/Python Setup/website/assets/setup/DownloadPyCharm.png)
-![python download image](../../setup/Python Setup/website/assets/setup/PyCharmWelcome.png)
-![python download image](../../setup/Python Setup/website/assets/setup/PyCharmInterpreter.png)
+
 
 Now select Create New Project. PyCharm will point to a new folder called PyCharmProjects under your home 
 directory. Just change the untitled portion of the Location's filepath to Tutorial. This will create a 
@@ -79,13 +72,17 @@ PyCharm, you will be given a similar dialogue option. While you do not have to k
 the default PyCharm directory, it is a simple way to organize projects. Another point is that PyCharm will 
 always open to the last Project that you were working on.
 
-![python download image](../../setup/Python Setup/website/assets/setup/PyCharmLocation.png)
+![python download image](../../setup/Python Setup/website/assets/setup/PyCharmWelcome.png)
 
 Now we need to point PyCharm to the correct Python interpreter. To do so, select the Project Interpreter 
 dropdown and select Existing Interpreter. Then select the gear icon and click on Add Local. Select Conda 
 Environment in the panel to the left. Now click on the three dots next to the Interpreter input field and 
 navigate to the Python executable in the path shown below. Also, make this interpreter available to other 
 projects as a convenience.
+
+![python download image](../../setup/Python Setup/website/assets/setup/PyCharmInterpreter.png)
+
+![python download image](../../setup/Python Setup/website/assets/setup/PyCharmLocation.png)
 
 ![python download image](../../setup/Python Setup/website/assets/setup/PyCharmSelectInterpreter.png)
 
