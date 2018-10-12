@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 1: Set up</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#intro">Purpose</a></li>
+              <li><a href="#install">Installing Python</a></li>
+              <li><a href="#pycharm">Configuring PyCharm</a></li>
+              <li><a href="#help">Getting Help</a></li>
+            </ul>
+          </li>
+          <li><a href="02_basics.html">Part 2: Basics</a></li>
+          <li><a href="03_fileWalk.html">Part 3: FileWalk</a></li>
+          <li><a href="04_timeKeeper.html">Part 4: TimeKeeper</a></li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li><a href="06_scrapy.html">Part 6: Web Scraping</a></li>
+          <li><a href="07_csvParsing.html">Part 7: CSV Parsing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="scripts/SetUpScripts.zip" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <!-- Page Content Holder -->
+      <div id="content">
+        <div class="container-fluid">
+          <h2>Part 1: Set up</h2>
+          <p class="lead">Do it once, but do it right</p>
+        </div>
+        <div class="container-fluid" id="intro">
+          <hr>
+          <h3>Purpose</h3>
+          <p class="lead">Learn some fundamentals in order to integrate Python into your day to day workflow</p>
+          <p>
+            This tutorial aims to provide the typical Consultant and Senior Consultant with a foundation to begin using Python with purpose. The operative word is <i>begin</i>; we want people to start thinking about how Python can solve problems, create efficiencies, and ultimately drive value for clients. This guide will get the user from absolutely no knowledge of Python to a point where they can take it upon themselves to continue developing this skill. There will be a mix of step-by-step instructions and actual code that you can start using immediately. After this, you should have enough context to experiment and learn more when non-billable.
+          </p>
+        </div>
+        <div class="container-fluid" id="install">
+          <hr>
+          <h3>Install Python (Miniconda)</h3>
+          <p class="lead">Get a standardized Python environment set up locally and on Amazon WorkSpaces</p>
+          <p>
+            The set up process should be the same on both your AWS and local desktops (except the drive location). As such, we recommend going through this process for both systems. Having the ability to code in either environment is very useful. For example, Python can only communicate with a project's SQL Database in the AWS environment. In other cases, it can be a good idea to keep a copy of a client project locally to isolate code from the primary folder.
+          </p>
+          <p>
+            We will use an open-source distribution of Python called Miniconda. It is a stripped down version of the widely popular Anaconda Data Science Platform. It provides tools for managing virtual environments and package dependencies, emphasizing reproducability and ease of use. Go ahead and download Miniconda from their website, <span class="link"><a href="https://conda.io/miniconda.html" target="_self">here</a></span>. There are several options, but choose the Python 3.x installer for the 64-bit version of Windows.
+          </p>
+          <img src="assets/setup/DownloadMiniconda.png" alt="download" style="width: 100%">
+          <br>
+          <p>
+            Run the installer and go through the following steps:
+            <ol>
+              <li><p>Press Next and agree to the License Agreement.</p></li>
+              <li><p>Install locally ("Just Me").</p></li>
+              <br>
+              <b>IMPORTANT:</b>
+              <li><p>Change the Destination Folder to either:</p>
+                <ul>
+                  <li><p>On <i>local</i> desktop: <code>C:\Miniconda3</code></p></li>
+                  <li><p>On <i>AWS</i> desktop: Try <code>D:\Miniconda3</code> but if it fails, keep it in <code>C:</code> drive</p></li>
+                </ul>
+              <br>
+              <li><p>Press Next and make sure both Advanced Options are <b>not</b> selected.</p></li>
+              <li><p>Proceed with the installation (refer to images below)</p></li>
+              <li><p>Click on the "Download Source Files" button in the sidebar and unzip the files in a location of your choosing</p></li>
+              <li><p>Once unzipped, Run the script called <code>verify_install.bat</code></p></li>
+                <ul>
+                  <li><p>The installation is successful if a Python console opens</p></li>
+                  <li><p>At the top of the console, it should say the Python version number and "Continuum Analytics"</p></li>
+                  <li><p>Type: <code>print("Hello, World!")</code> and press enter</p></li>
+                  <li><p>Congratulations, you've written a Python program!</p></li>
+                </ul>
+              <li><p>Finally, run the script called <code>create_env.bat</code></p></li>
+                <ul>
+                  <li><p>This may take 5 to 10 minutes, but it is creating a special Python environment by installing several packages that are useful to common workflows in Python. To read more about Conda Environments, refer to their docs <span class="link"><a href="https://conda.io/docs/user-guide/index.html">here</a></span>.</p></li>
+                  <li>
+                    <p><b>NOTE: It is safe to exit the install screen upon seeing this text otherwise the process is still working:</b></p>
+                    <img src="assets/setup/MinicondaComplete.png" alt=completed style="height: 200px; width: 375px;">
+                  </li>
+                </ul>
+            </ol>
+          </p>
+          <br>
+          <div class="row align-items-center">
+            <div class="col-4">
+              <img class="img-responsive" src="assets/setup/MinicondaInstallType.png" alt="download">
+            </div>
+            <div class="col-4">
+              <img class="img-responsive" src="assets/setup/MinicondaInstallLocation.png" alt="download">
+            </div>
+            <div class="col-4">
+              <img class="img-responsive" src="assets/setup/MinicondaInstallOptions.png" alt="download">
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" id="pycharm">
+          <br>
+          <hr>
+          <h3>Configuring PyCharm</h3>
+          <p class="lead">The IDE is where you will spend most of your time programming with Python</p>
+          <p>
+            Now that Python and Conda are on our system, we want to install something called an Integrated Development Environment (IDE). The best way to think of an IDE is a text editor designed for a specific programming language. Such integration provides a lot of useful functionality that a general-purpose text editor does not have. While one could rely on a simple text-editor and the command-line, we found that using PyCharm is a similar experience to SQL Server Studio, an IDE of its own. You can write Python, manage directories, and run programs in a single window. It also has code-completion features and tool tips which help the user learn the language and work efficiently. In short, IDEs are very advantageous for beginners learning a language as well as experts seeking to optimize their workflow.
+          </p>
+          <div class="row align-items-center">
+            <div class="col-6">
+              <p>
+                First, download the <b>Community</b> version of PyCharm <span class="link"><a href="https://www.jetbrains.com/pycharm/download/#section=windows" target="_self">here</a></span>. Simply go through all the default settings and run it once finished. While the default settings are fine, feel free to select the option that associates all <code>*.py</code> files with PyCharm. If it asks to import settings, just skip it and press "OK" to complete the installation process. It should also prompt the user to pick a theme; choose the style your prefer. Note that it can be changed at any time. Finally, it may ask the user install featured plugins. It doesn't hurt to install plugins for Markdown, Bash, and R although we will ignore them for now.
+              </p>
+            </div>
+            <div class="col-6">
+              <img src="assets/setup/DownloadPyCharm.png" alt="download" style="width: 100%">
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-6">
+              <p>
+                Now select <code>Create New Project</code>. PyCharm will point to a new folder called PyCharmProjects under your home directory. Just change the <code>untitled</code> portion of the Location's filepath to <code>Tutorial</code>. This will create a project folder that we can use moving forward. Note that every time you create a new Python project in PyCharm, you will be given a similar dialogue option. While you do not have to keep all project files in the default PyCharm directory, it is a simple way to organize projects. Another point is that PyCharm will always open to the last Project that you were working on.
+              </p>
+              <br>
+              <img src="assets/setup/PyCharmLocation.png" alt="download" style="width: 100%">
+            </div>
+            <div class="col-6">
+              <img src="assets/setup/PyCharmWelcome.png" alt="download" style="width: 100%">
+            </div>
+          </div>
+          <br>
+          <div class="row align-items-center">
+            <div class="col-6">
+              <p>
+                Now we need to point PyCharm to the correct Python interpreter. To do so, select the Project Interpreter dropdown and select <code>Existing Interpreter</code>. Then select the gear icon and click on <code>Add Local</code>. Select <code>Conda Environment</code> in the panel to the left. Now click on the three dots next to the <code>Interpreter</code> input field and navigate to the Python executable in the path shown below. Also, make this interpreter available to other projects as a convenience.
+              </p>
+              <img src="assets/setup/PyCharmSelectInterpreter.png" alt="download" style="width: 100%">
+            </div>
+            <div class="col-6">
+              <img src="assets/setup/PyCharmInterpreter.png" alt="download" style="width: 100%">
+            </div>
+          </div>
+          <br>
+          <p>
+            At this point, wait for PyCharm to finish setting up, indicated by the progress bar at the bottom of the window. Once it completes, you are all set to start programming in Python using Miniconda and PyCharm. A few things to note. PyCharm is a keyboard centric program. Much like Excel hotkeys, you can learn shortcuts that make using PyCharm more productive. If you are a hotkey maniac, then you might want to spend some time looking at the Keymap section in settings. It shows all default shortcuts and every function can be remapped however you like!
+          </p>
+          <p>
+            Another useful thing to know is the Project Interpreter settings screen. To get there, go to Settings with <code>Ctrl + Alt + S</code> (File -> Settings). Once there, go to Project -> Project Interpreter to view which Python executable is being used and a list of installed packages. This should already be set but it is handy to know where it can be changed.
+          </p>
+          <p>
+            Finally, one of the most useful aspects of using PyCharm is the integrated Python Shell. This is the actual python program, sometimes referred to as the Interpreter or Console, that allows the developer to execute code line by line. Normally, this is accessed via a seperate program window, but PyCharm integrates it into the IDE. To pin it to your screen, go to <code>Tools</code> and click <code>Python Console...</code>.
+          </p>
+        </div>
+        <div class="container-fluid" id="help">
+          <hr>
+          <h3>Getting Help</h3>
+          <p>Content Coming Soon...</p>
+        </div>
+        <div class="container-fluid survey">
+          <hr>
+          <p>Help us improve this content by taking <span class="link"><a href="https://docs.google.com/forms/d/e/1FAIpQLSf-33-dG9oQd94nFvg0x9VVSntRhVKWRPZd157DrcTfB4NP9A/viewform?usp=sf_link" target="_self">this section's survey!</a></span></p>
+        </div>
+        <button onclick="toTop()" id="topButton" title="Go to Top">Top</button>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+      <script src='js/buttonTop.js' type="text/javascript"></script>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+name: test
+dependencies:
+- python=3.6
+- pip
+- mkl
+- numpy
+- pandas
+- pip:
+  - datetime
+  - openpyxl

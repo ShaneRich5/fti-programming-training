@@ -1,0 +1,34 @@
+name: pdt-env
+dependencies:
+- python=3.6
+- pip
+- wheel
+- setuptools
+- pep8
+- openssl
+- requests
+- urllib3
+- pyyaml
+- lxml
+- beautifulsoup4
+- python-dateutil
+- hdf5
+- pillow
+- mkl
+- numpy
+- matplotlib
+- pandas
+- scipy
+- statsmodels
+- scikit-learn
+- xlrd
+- openpyxl
+- pyodbc
+- sqlalchemy
+- boto3
+- s3fs
+- pip:
+  - datetime
+  - pyautogui
+  - tabula-py
+  - python-docx

@@ -1,0 +1,245 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li><a href="01_setup.html">Part 1: Set up</a></li>
+          <li><a href="02_basics.html">Part 2: Basics</a></li>
+          <li><a href="03_fileWalk.html">Part 3: FileWalk</a></li>
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 4: TimeKeeper</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#introTimeKeeper">Introduction</a></li>
+              <li><a href="#userInput">User Input</a></li>
+              <li><a href="#timer">Keeping Time</a></li>
+              <li><a href="#output">Writing Output</a></li>
+              <li><a href="#finalTimeKeeper">Final Product</a></li>
+            </ul>
+          </li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li><a href="06_scrapy.html">Part 6: Web Scraping</a></li>
+          <li><a href="07_csvParsing.html">Part 7: CSV Parsing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="scripts/TimeKeeper.zip" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <div id="content">
+        <div class="container-fluid">
+          <h2>TimeKeeper</h2>
+          <p class="lead">While not quite the Carpe Diem killer, we can still facilitate time keeping</p>
+        </div>
+        <div class="container-fluid" id="introTimeKeeper">
+          <hr>
+          <h3>Introduction</h3>
+          <p class="lead">Easy Time Keeping</p>
+          <p>
+            Time keeping is an aspect of consulting that no one likes but the entire business model depends on it. Although replacing outdated accounting software is beyond the scope of this series, we can still write a straightforward utility program in Python that facilitates the time keeping process. Many of you probably have a pure Excel solution for maintaining your own time entries. The process probably goes something like the following:
+          </p>
+          <ol>
+            <li><p>Determine how many hours you spent on a project</p></li>
+            <li><p>Manually enter the details of a specific task as they are done</p></li>
+          </ol>
+          <p>
+            We can use Python to easily manage this process. While the user still has to enter the information, Python can keep track of the time for us and insert the data into a spreadsheet. The clear drawback of this program is that its accuracy is dependendant on the user remembering to use it consistently and accurately. In theory, however, keeping time with a program should provide more granular record keeping and a dataset that could be analyzed on a yearly, quarterly, monthly, and weekly basis.
+          </p>
+          <p>
+            To start, go ahead and download the source files to a subfolder in the Tutorial PyCharm project folder. There should be two files, an excel file that is empty except for a single row of column headers. The second file is the demo version of this program. Create a new Python file called <code>time_keeper.py</code> which will be your version.
+          </p>
+          <p>
+            As always, we want to start the program by importing all dependencies, of which there are more than the previous project. We are using the <code>os</code> package again for the same purpose, managing filepaths. The next three should also make conceptual sense given our task at hand. We have two dependencies that provide date and time functionality. The third package, <code>openpyxl</code>, is a tool for interfacing between Python and Excel. Note we are using aliasing to keep our code syntactically clean and readable.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  import os
+  import time as t
+  import openpyxl as xl
+
+  from datetime import datetime as dt
+            </code>
+          </pre>
+          <p>At this point, we can break down our process into three steps:</p>
+          <ol>
+            <li><p>Getting a time entry's information from the user</p></li>
+            <li><p>Recording the time of a given entry</p></li>
+            <li><p>Writing the entry to our spreadsheet</p></li>
+          </ol>
+        </div>
+        <div class="container-fluid" id="userInput">
+          <hr>
+          <h3>User Input</h3>
+          <p class="lead">Get some basic paramters</p>
+          <p>
+            Python makes getting user input from the command line very easy. The built-in function <code>input()</code> takes as its argument a string of text that prompts the user for some input. We can store whatever the user types in a variable for use later in the program. The command line is an extremely useful tool but it may seem intimidating to a novice. This program could be rewritten to use some web framework or GUI package that simplifies the User Experience by creating an actual User Interface. For now, using the command line is the easiest and fastest solution.
+          </p>
+          <p>
+            We simply prompt the user three times, storing the input for each entry. The fourth variable, however, relies on the <code>datetime</code> package. Why ask the user for the date when we have the ability to infer this information for them? All the fourth line does is retrieve today's date and then formats it as "mm/dd/yyyy".
+          </p>
+          <pre class="prettyprint">
+            <code>
+  project = input("What is the name of your project?\n")
+  matter_id = input("What is the Matter ID?\n")
+  description = input("Type your narrative here:\n")
+  date = dt.today().strftime('%m/%d/%Y')
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="timer">
+          <hr>
+          <h3>Keeping Time</h3>
+          <p class="lead">How do we deal with time?</p>
+          <p>
+            Now that we have the basic paramters of the current time entry task, we can start recording time. The logic for this feature will function as follows:
+          </p>
+          <ol>
+            <li><p>Get the starting timestamp</p></li>
+            <li><p>Stay in a loop while the user is billing time</p></li>
+            <li><p>Once the user is done, take the ending timestamp</p></li>
+            <li><p>Calculate the time delta between the end and start timestamps</p></li>
+          </ol>
+          <p>
+            The <code>time</code> package is very useful for measuring the runtime of a program. Basically you take two timestamps and calculate their difference. You can apply this to any piece of code that you would want to time. In this case, we get the first timestamp right after saving the user input. We then enter a While Loop which runs so long as an arbitrary control variable called <code>stop</code> has no value (or more precicely, a <code>NoneType</code> value). If the user presses any key, the subsequent condition is met. The ending timestamp is cached and we exit the loop.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  stop = None
+  tic = t.time()
+  while stop is None:
+      stop = input("Press any key to stop...")
+      if stop is not None:
+          toc = t.time()
+          elapsed_time = round(toc - tic, 2)
+          print("{0:.2f}hrs Elapsed...".format(elapsed_time))
+          break
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="output">
+          <hr>
+          <h3>Writing Output</h3>
+          <p class="lead">Use the Python-Excel Interface</p>
+          <p>
+            Our next and final task is to record the entry into the spreadsheet. There are a few ways to interface between Python and Excel, but here we will demonstrate the <code>openpyxl</code> package which has a lot more functionality. Essentially, we point Python to the filepath of existing workbook. We then create a list of field entries that represent a single row in the spreadsheet. Finally, we leverage the <code>openpyxl</code> by opening the workbook, referencing the active sheet, appending the row that we created, and finally saving the changes that were made.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  # File handling
+  root = os.getcwd()
+  timesheet = os.path.join(root, 'timesheet.xlsx')
+
+  # Store the data as a list data structure
+  row = [str(date), project, str(matter_id), str(elapsed_time), description]
+
+  # Write the data to the new file
+  wb = xl.load_workbook(timesheet)
+  ws = wb.get_active_sheet()
+  ws.append(row)
+  wb.save(timesheet)
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="finalTimeKeeper">
+          <hr>
+          <h3>Final Product</h3>
+          <p class="lead">Extending this utility program</p>
+          <p>
+            That was a very basic time keeper utility written in Python. Below are some challenges for extending the functionality of this program:
+          </p>
+          <ul>
+            <li><p><b>Formatting:</b> Try to define the formatting of the Excel spreadsheet from Python</p></li>
+            <li><p><b>GUI:</b> Develop a Graphical User Interface using a packages like <code>tkinter</code></p></li>
+            <li><p><b>Web App:</b> Can you develop a web app using something like <code>Flask</code>?</p></li>
+          </ul>
+          <p>The final, annotated code:</p>
+          <pre class="prettyprint">
+            <code>
+  """
+  Record project information and elapsed time to an Excel time sheet.
+  """
+
+  import os  # Handles paths
+  import time as t  # Record time
+  import openpyxl as xl  # Interface with Excel
+
+  from datetime import datetime as dt  # Get today's date and format it
+
+
+  # Record user input
+  project = input("What is the name of your project?\n")
+  matter_id = input("What is the Matter ID?\n")
+  description = input("Type your narrative here:\n")
+  date = dt.today().strftime('%m/%d/%Y')  # Get and format date
+
+  stop = None  # Helper variable to control the while loop
+  tic = t.time()  # Start keeping the time
+  while stop is None:
+      stop = input("Press any key to stop...")  # Prompt user while condition holds
+      if stop is not None:  # Condition no longer True when user presses a key
+          toc = t.time()  # Store the time and calculate the difference
+          elapsed_time = round(toc - tic, 2)
+          print("{0:.2f}hrs Elapsed...".format(elapsed_time))
+          break  # Exit the loop!
+
+  # File handling
+  root = os.getcwd()
+  timesheet = os.path.join(root, 'timesheet.xlsx')  # Point to the time sheet
+
+  # Store the data as a list data structure
+  row = [str(date), project, str(matter_id), str(elapsed_time), description]
+
+  # Write the data to the new file
+  wb = xl.load_workbook(timesheet)  # Load the time sheet
+  ws = wb.get_active_sheet()  # Tell Python to work with the active sheet
+  ws.append(row)  # Append the row to the time sheet
+  wb.save(timesheet)  # Save these changes
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid survey">
+          <hr>
+          <p>Help us improve this content by taking <span class="link"><a href="https://docs.google.com/forms/d/e/1FAIpQLSd42RjJCfRrCEXbrUM_rb-iHGlgepkWvjmwLlEdfYVAKuL_wQ/viewform?usp=sf_link" target="_self">this section's survey!</a></span></p>
+        </div>
+        <button onclick="toTop()" id="topButton" title="Go to Top">Top</button>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+    </main>
+  </body>
+</html>

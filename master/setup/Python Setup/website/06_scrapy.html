@@ -1,0 +1,567 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li><a href="01_setup.html">Part 1: Set up</a></li>
+          <li><a href="02_basics.html">Part 2: Basics</a></li>
+          <li><a href="03_fileWalk.html">Part 3: FileWalk</a></li>
+          <li><a href="04_timeKeeper.html">Part 4: TimeKeeper</a></li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 6: Web Scraping</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#introScraping">Introduction</a></li>
+              <li><a href="#scrapeHTML">Scarping HTML</a></li>
+              <li><a href="#parseJSON">Scraping JSON</a></li>
+            </ul>
+          </li>
+          <li><a href="07_csvParsing.html">Part 7: CSV Parsing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="#" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <div id="content">
+        <div class="container-fluid">
+          <h2>Web Scraping</h2>
+          <p class="lead">Obataining data contained in the World Wide Web</p>
+        </div>
+        <div class="container-fluid" id="introScraping">
+          <hr>
+          <h3>Introduction</h3>
+          <p class="lead">Why web scraping?</p>
+          <p>
+            Recently, FTI has been asked to do an increasing amount of work around web scraping and retrieving data from API's (<span class="link"><a href="https://en.wikipedia.org/wiki/Application_programming_interface" target="_self">read more</a></span>). Imagine that you need to extract a lot of data from a third party. Rather than transferring data back and forth in the form of files, you can simply query their database directly by using their API. In this tutorial, we will be covering some of the basic elements of web scraping (primarily HTTP requests) and teach you how to extract and transform large amounts of data with little overhead using Python.
+
+            For our purposes, web scraping can be broken down into two main use cases:
+            <ol>
+              <li><p>Parsing human-readable web pages for certain data and saving it to text files</p></li>
+              <li><p>Parsing machine-readable JSON data into a relational database format</p></li>
+            </ol>
+          </p>
+        </div>
+        <div class="container-fluid" id="scrapeHTML">
+          <hr>
+          <h3>Web Scraping: Saving Files</h3>
+          <p class="lead">Parse web data and save it to disk</p>
+          <p>
+            There are many ways that scraping a website to gather files can be of value.  For instance, say that we want all articles off of a specific news site or the first 100,000 emails off of WikiLeaks to run a word analysis on for relevant information.  It certainly isn't something that can be done by hand, so we need to write some code to gather all of those files in order to run through the analysis.
+
+            To start, we need to import our packages (all of which will be elaborated on later):
+          </p>
+          <pre class="prettyprint">
+            <code>
+  import os
+  import requests
+  from bs4 import BeautifulSoup
+            </code>
+          </pre>
+          <p>Next, we indicate our directory location for storing our scraped documents. We'll use the <code>os</code> module to set up a dynamic path as done in  previous parts of the series.</p>
+          <pre class="prettyprint">
+            <code>
+  storage_path = os.path.join(os.getcwd(), 'Python_Scrape_Ouput')
+            </code>
+          </pre>
+          <p>
+            Now we will determine our URL for which we are trying to scrape and the strategy for scraping through the pages of the website (if applicable).  For example, WikiLeaks has different URL endings for each email. This ending is simply a key called <code>emailID</code> witch an integer value. As such, we can obtain our data by looping over each new URL, changing the <code>emailID</code> value at each iteration. These webpoints are usually determined by some online documentation or manual investigation prior to writing any code.
+          </p>
+          <p>
+            We will simply indicate the start and end points for our scrape, which in this case will be the first 100,000 <code>emailID</code>s. Go ahead and paste the following URL in any web browser, appending any integer to the end. This is precesiley what we will do programmatically, 100,000 times.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  url = r'https://search.wikileaks.org/gifiles/emailid/'
+  start = 1
+  end = 100000
+            </code>
+          </pre>
+          <p>
+            After defining these parameters, we will implement the function that cycles through each <code>emailID</code>, extract the relevant data, and write it to new text files generated in the <code>storage_path</code> folder.  The function, which we will call <code>make_requests</code>, will need to intake our <code>storage_path</code>, <code>url</code>, <code>start</code>, and <code>end</code> variables.  As we've mentioned, we're going to need to loop through every <code>emailID</code> from start to end, so we'll start by writing a while loop that stops after the end <code>emailID</code> in order to capture each of these instances.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  def make_requests(start, end, url, storage_path):
+    current_number = start
+    while current_number <= end:
+      ...
+      current_number += 1
+            </code>
+          </pre>
+          <p>
+            Often times, requesting data from websites can fail. To account for this possibility, we want to wrap the request with a "try-except" clause to prevent our code from breaking with a bad request. This clause gives us control over how Python handles errors. In effect, we will "try" to make our request. In the event that it fails for whatever reason, we decide that the "except" will print out the error and <code>emailID</code> to our console. This is good practise because now our program will essentially take note of the problem and continue instead of stopping altogether.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  def make_requests(start, end, url, storage_path):
+    current_number = start
+    while current_number <= end:
+      try:
+        ...
+        current_number += 1
+      except Exception as e:
+        print(current_number)
+        print(e)
+        current_number += 1
+            </code>
+          </pre>
+          <p>
+            Now we can define what to do for each <code>emailID</code>. To do this, we make a GET request to the specified url and pull the raw HTML code of that given web page. This allows us to target the specific content that contians the data that we care about. Use the <code>req = requests.get(URL)</code> method to pull the HTML content of any URL (<span class="link"><a href="http://www.pythonforbeginners.com/requests/using-requests-in-python">read more</a></span>).  We will store this object in a variable called <code>req</code> so that we can access its information later.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  req = requests.get(url + str(current_number))
+            </code>
+          </pre>
+          <p>
+            From this, we need to clarify exactly what we want to capture and save from our scraped webapges.  For example, we are interested in the metadata (date, email id, etc.) and the actual email content on the WikiLeaks site. We need to locate this data in the HTML code stored from our request; fortunately, the <code>beautifulsoup</code> package will help us out here (<span class="link"><a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">read more</a></span>). Store <code>BeautifulSoup(req.text)</code> into a new variable. Now Python has access to a nested data structure known as the Document Object Model (DOM). The data we want to pull is still in the DOM so before we can view, parse, and use it, we need to find it within the DOM.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  soup = BeautifulSoup(req.text)
+            </code>
+          </pre>
+          <p>
+            We can find the specific elements of the DOM that contains our desired data in a couple of ways. If we know the URL before hand (<span class="link"><a href="https://search.wikileaks.org/gifiles/emailid/1">example</a></span>), Google Chrome has a built in Developer Tool that allows the user to visually traverse the HTML of a given webpage. While on the target page, simply press <code>ctrl + shift + I</code> and select the <code>Elements</code> tab. Once here, you can explore the DOM in a human-readable format and identify exactly what we need to parse out from the page. This tool is easy to use without much knowledge of web technologies as it visually highlights portions of the actual webapge as you naivagte the DOM.
+          </p>
+          <p>
+            Alternatively, we can also use Python to print our beautified GET request to the console.  Execute <code>print(soup.prettify())</code> to view the output in our console.  Then, perform a simple <code>ctrl + f</code> in the console for some of the content we are looking for and identify the closest distinct location of our data. As before, we are looking for the tags that idenitfy the desired data.
+          </p>
+          <p>
+            For the desired WikiLeaks data, we can find the metadata located under an element called <code>table</code> and the email content located within something called <code>div id="doc-description"</code>.  So, we will utilize beautifulsoup's <code>soup.find()</code> method to search for these two categories and capture the related data contained therein!
+          </p>
+          <pre class="prettyprint">
+            <code>
+  email_content = (soup.find("div", {"id": "doc-description"}).text)
+  meta_data = (soup.find("table").text)
+            </code>
+          </pre>
+          <p>
+            Finally, we're going to want to write all of this data to a text file so we can view and analyze it later.  First, we want to define the filename and filepath of the new text file relative to the <code>storage_path</code> location created previously. Then we can actually create the file using the <code>with</code> contruct which tells Python to open the new file in "write" mode. It will then perform the indented code and implicitely close the file once finished.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  fname = 'EmailID_' + str(current_email) + '.txt'
+  fpath = os.path.join(storage_path, fname)
+  with open(fpath, 'w') as f:
+    f.write(meta_data)
+    f.write(email_content)
+            </code>
+          </pre>
+          <p>
+            Now that our function is written, we just have to call and run it!
+          </p>
+          <pre class="prettyprint">
+            <code>
+  make_requests(start, end, url, storage_path)
+            </code>
+          </pre>
+          <p>
+            Here is all of this put together, so take a minute to identify and understand each step:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  import os
+  import requests
+  from bs4 import BeautifulSoup
+
+  storage_path = os.path(os.getcwd(), 'Python_Scrape_Ouput')
+
+  url = r'https://search.wikileaks.org/gifiles/emailid/'
+  start = 1
+  end = 100000
+
+  def make_requests(start, end, url, storage_path) :
+    current_number = start
+    while current_number <= end :
+      try:
+        # Perform the GET request and store the raw HTML.
+        req = requests.get(url + str(current_number))
+        soup = BeautifulSoup(req.text)
+
+        # Parse the desired data from the HTML
+        email_content = (soup.find("div", {"id": "doc-description"}).text)
+        meta_data = (soup.find("table").text)
+
+        # Write the parsed data to a text file
+        fname = 'EmailID_' + str(current_email) + '.txt'  # Define a file name
+        fpath = os.path.join(storage_path, fname)  # Define the filapath
+        with open(fpath, 'w') as f:  # Create and populate the file
+          f.write(meta_data)
+          f.write(email_content)
+
+        # Increase the iterator to move onto the next EmailID webpage
+        current_number += 1
+      except Exception as e:
+        # Handle errors by printing out the current EmailID and the error
+        print(current_number)
+        print(e)
+        current_number += 1
+
+  # Call our function!
+  make_requests(start, end, url, storage_path)
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="parseJSON">
+          <hr>
+          <h3>Parsing JSON</h3>
+          <p class="lead">Pulling semi-structured data from the web</p>
+          <p>
+            For this example, we will be scraping a regional internet registrar.  The first step in any program is to import our key dependencies. In this program, we will rely on four packages: re, math, requests, and pandas. The re package allows python to leverage regular expressions, which is a form of character pattern matching (<span class="link"><a href="https://en.wikipedia.org/wiki/Regular_expression">read more</a></span>). The math package allows Python to perform various mathematical operations. The requests package allows python to send HTTP requests to the internet. And finally, the pandas package provides python with a special data type called a 'data frame' which allows us to store data in a tabular format (<span class="link"><a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html">read more</a></span>).
+          </p>
+          <p>As before, we will import these dependencies</p>
+          <pre class="prettyprint">
+            <code>
+  import re
+  import requests
+  import pandas as pd
+            </code>
+          </pre>
+          <p>
+            Now that the program can access the relevant directories, we want to set up some of the variables we will be using later on in the program. First, let's declare the 'URL' variable. This URL will take us to RIPEStat's API and allow us to download data from their system in the form of a JSON file (more on this later). As you will see by looking at the string, there is a portion that says '?resource='. We tell the API what data we want by appending our parameters to the end of this string. We will then feed this new string (the original URL variable plus the parameters we append to the end of it) to the requests package to get back a JSON file.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  URL = "https://stat.ripe.net/data/announced-prefixes/data.json?resource="
+  STARTTIME = "&starttime=2000-08-01T00%3A00"
+            </code>
+          </pre>
+          <p>
+            Now that we have everything set up we are ready to code. Next thing we need to do is create the functionality that will actually connect to RIPEStat's API and scrape their data. We're going to be using multiple functions and variables, so best to wrap everything up into a Class. Let's call this class <code>Scraper</code>. We will need to instantiate this class every time we want to work with it in our program, so let's create an initialization class called <code>__init__</code> and give it a few attributes, namely <code>url</code>, <code>request_code</code>, <code>request</code>, <code>json</code>, <code>asn</code>, <code>starttime</code>, and <code>rir</code>.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  class Scraper:
+      """
+      Class responsible for obtaining JSON files from APIs
+      """
+      def __init__(self, url, starttime, asn, rir = 'RIPE'):
+          """
+          Class initializer
+          """
+          try:
+              self.starttime = starttime
+          except:
+              self.starttime = None
+
+          self.url = url
+          self.request_code = None
+          self.request = None
+          self.JSON = None
+          self.asn = asn
+          self.rir = rir
+            </code>
+          </pre>
+          <p>
+            Now that we have our initialization method created, let's add some additional functionality to our new class (note, the code is still indented so we are still coding within the class). Let's create a method called <code>make_request</code> that will let us send requests to the internet. In this method we concatenate a few of the attributes we define above (<code>url</code>, <code>asn</code>, and <code>starttime</code>) and we feed this string into the <code>requests.get()</code> method of the requests package. This sends an HTTP request to the internet and allows us to connect to the RIPEStat API. At the end of this method, we assign the request object returned from the <code>.get()</code> method and assign it to our <code>request</code>attribute (so that we can access it later) and return the request attribute. Note, the requests object has attributes of its own (e.g. <code>.status_code</code>) and methods (e.g. <code>.json()</code>) so the request attribute is storing an object that contains the JSON string.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  class Scraper:
+
+      ...
+
+      def make_request(self):
+          """
+          Use request module to obtain raw data
+          """
+          request = requests.get(self.url + self.asn + self.starttime)
+          request_code = request.status_code
+          self.request = request
+          self.request_code = request_code
+          return self.request
+            </code>
+          </pre>
+          <p>
+            After running the <code>make_request</code> method, we will want to get the actual JSON file from the HTTP request. In the code below we check to make sure we didn't return a request code of 200 (indicating an error). If no error occurred, then we want to convert the results from our <code>make_request</code> method (currently stored in our <code>request</code> attribute as a JSON string) to a dictionary, using the <code>.json()</code> method. We will then assign this value to our JSON attribute and return the dictionary.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  class Scraper:
+
+      ...
+
+      def produce_json(self):
+          """
+          Take successful request and create a Python dictionary
+          """
+          if self.request_code != 200:
+              return
+          self.JSON = self.request.json() # json method returns a dictionary
+          return self.request.json()
+            </code>
+          </pre>
+          <p>
+            Next, we want to create a method that will allow us to extract the relevant pieces of information from our JSON attribute, which is currently storing a dictionary. Because the JSON attribute is storing a dictionary, we will access the values held in the dictionary by feeding it a key (taking advantage of the key-value relationship of the dictionary data structure). Once we've indexed into the dictionary, we return this value.
+          </p>
+        </div>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def relevant_info(self, key = None):
+          """
+          Takes JSON, indexes into proper key (if provided, defaults to None for error handling purposes),
+          and flatten recursively
+          Note that key must be a string datatype ('data' or "data" as opposed to data with no parentheses)
+          """
+          if key is None:
+              return
+          relevant_info = self.JSON[key]
+          return relevant_info
+          </code>
+        </pre>
+        <p>
+          At this point we have successfully scraped data from the internet and have it stored as a dictionary. Now we will transition and begin the JSON parsing section to learn the next steps in the process.
+        </p>
+        <p>
+          A JSON file is a standard file format used to transfer readable text of key-value pairs, usually obtained from an online source (<span class="link"><a href=" https://www.w3schools.com/js/js_json_intro.asp">read more</a></span>).  A JSON file is broken up into sets of dictionaries, lists, and values.  Dictionaries are indicated by squiggly brackets, <code>{}</code>, and lists are indicated by square brackets, <code>[]</code>.  As a JSON file is a dictionary as a whole, all other values are just represented in their key-value pairs as <code>"key":"value"</code>.  We will use the following JSON example going forward in our parse, but we should take a second to get comfortable and notice the different dictionaries and lists here before moving on:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  {
+      "status": "ok",
+      "see_also": [],
+      "time": "2018-03-05T18:49:20.561320",
+      "messages": [
+          [
+              "info",
+              "Results exclude routes with very low visibility (less than 3 RIS full-feed peers seeing)."
+          ]
+      ],
+      "query_id": "20180305184920-77ae1df6-a1d4-45a2-9e50-3bf97819648e",
+      "data": {
+          "resource": "12345",
+          "prefixes": [
+              {
+                  "timelines": [
+        {
+                    "endtime": "2018-02-19T16:00:00",
+                          "starttime": "2018-02-05T16:00:00"
+                    },
+        {
+                    "endtime": "2018-03-05T16:00:00",
+                          "starttime": "2018-02-19T16:00:00"
+                    }
+      ],
+                  "prefix": "110.24.64.0/20"
+              }
+          ],
+          "query_starttime": "2018-02-05T16:00:00",
+          "query_endtime": "2018-03-05T16:00:00"
+      }
+  }
+          </code>
+        </pre>
+        <p>
+          Since we are using the same data and process from the Scraping to Parse into a Database section, we can add all of our new methods to our previously created Scraper class for simplicity.  We want to start by transforming our previously scraped data into something we can easily analyze (as if we were analyzing something in SQL).  To do this we need to 'flatten' the data, which means we are going to break down the nested dictionary into a dictionary that is not nested (eventually, we will transform this into a flat relational database structure). To do this, we will need to create an 'inner function' (a function within a function) called 'flatten'. This function will test to see if the value being passed to it is a dictionary and, if it is, then loop through each key of the dictionary and recursively flatten the contents (<span class="link"><a href="https://towardsdatascience.com/flattening-json-objects-in-python-f5343c794b10">read more</a></span>).  Once we are done defining our 'flatten' inner function, we will call it in our 'flatten_json' function and return the result.  Our flattened JSON will allow us to end up with the exact path to get to each distinct value in the JSON file in a standardized format (ex: data_prefixes_1_prefix_107.85.64.0/18).
+        </p>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def flatten_json(self, relevant_info):
+            """
+            Creates a flat (not nested) dictionary and enumerates number of prefixes
+            """
+            out = {}
+
+            def flatten(x, name=''):
+                if type(x) is dict:
+                    for a in x:
+                        flatten(x[a], name + a + '_')
+                elif type(x) is list:
+                    i = 0
+                    for a in x:
+                        flatten(a, name + str(i) + '_')
+                        i += 1
+                else:
+                    out[name[:-1]] = x
+
+            flatten(relevant_info)
+            return out
+          </code>
+        </pre>
+        <p>
+          Now that we have our flattened JSON file, we can begin actually extracting and organizing the data so that it can be analyzed.  To do this, we will need to know which data fields we are trying to capture and save to our database as well as a little bit about the structure of the original JSON; as such, this next portion will be fairly different for each use case.  For this example, we will be trying to capture all of the prefixes, starttimes, and endtimes for the associated asn search in the above JSON example.  Also, we see that the prefixes are located in a list of dictionaries underneath "prefixes" while starttime and endtime are located in a list of dictionaries under "timelines" (which is distinct to each prefix).
+        </p>
+        <p>
+          To search for these values of interest within our flattened JSON, we will be using loops and regular expressions (<span class="link"><a href="https://docs.python.org/2/library/re.html">read more</a></span>).  Regular expressions are methods of pattern matching often containing special characters used to represent a wide of variety of character options (ex: 'it is 12:3\d' could be any time from 12:30 to 12:39).  Knowing this, we're going to need to write regular expressions to cycle through and find all of our values of interest.  Starting with prefixes, we need to go through every element in the list "prefixes" and add each prefix from the json to a list.  As we'll have to reference the different distinct list indices, we'll have to put the regular expression into a loop.  In the JSON that we are referencing above, there is only one prefix, but it has two instances of start and end times; so, we will have our loop range just represent the range of one, but we will have another formula to account for the number of instances of each starttime and endtime.  With all of this going on, it would be best to throw the whole process into a method that we can call continuously.  With all of this in mind, we can now write our first parsing method as:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def get_prefixes(self, flattened_json) :
+            prefixes = []
+            for elem in range(1)) :
+                regex = 'prefixes_' + str(elem) + '_prefix'
+                hit = re.search(regex, flattened_json.keys())
+                if hit :
+                    count = (sum([1 for index in flattened_json.keys() if re.search('prefixes_' + str(elem) + '_.*', index) is not None]) - 1) / 2
+                    prefixes += flattened_json[hit.group(0)] * int(count)
+            return prefixes
+          </code>
+        </pre>
+        <p>
+          As for the starttimes and endtimes, these will be specific to a prefix.  Since we already gathered all of our prefixes into a list, we can start off by calling <code>len(set(prefixes))</code> to get a list of distinct prefixes, and we can then use that list to cycle through and collect our associated startimes and endtimes.  We will once again need to loop through the prefixes to make our distinct regular expressions.  Additionally, since timelines is a list, there will be different indices before our starttimes and endtimes; thus we will have to use our regular expression shortcut of <code>'/d'</code> to take that into account.  So, we can write our regular expression methods to grab the start and endtimes corresponding to each prefix as:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def get_starttimes(self, flattened_json, prefixes) :
+            number_of_prefixes = len(set(prefixes))
+            starttimes = []
+            for prefix in range(len(number_of_prefixes)) :
+                regex = 'prefixes_' + str(prefix) + '_timelines_\d+_starttime'
+                hit = re.search(regex, flattened_json.keys())
+                if hit1 :
+                    starttimes += flattened_json[hit.group(0)]
+            return starttimes
+
+      def get_endtimes(self, flattened_json, prefixes) :
+          endtimes = []
+          for prefix in range(len(prefixes)) :
+              regex = 'prefixes_' + str(prefix) + '_timelines_\d+_endtime'
+              hit = re.search(regex, flattened_json.keys())
+              if hit :
+                  endtimes += flattened_json[hit.group(0)]
+          return endtimes
+          </code>
+        </pre>
+        <p>
+          Finally, we want to tie all of these data values back to the original search asn and rir.  To do this, we will just write a method that puts the original asn and original rir into lists the exact number of times that correspond to the length of our prefixes, starttimes, and endtimes lists.  So, our method can just look like:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def get_asn_rir(self, prefixes) :
+          asns = [self.asn] * len(prefixes)
+          rirs = [self.rir] * len(prefixes)
+          return asns
+          </code>
+        </pre>
+        <p>
+          Overall, there will be a lot of variability in the methods for extracting data from project to project, so we need to be ready to really go slow and continuously check our output as we work towards getting the exact values that we want in an organized fashion.
+
+          Now that we have all of our data flattened and the key pieces of information pulled out of the dictionary, we want to store the results of all of our hard work into a data frame (similar to a table in SQL). To do this, we are going to create a method called 'create_dataframe' where we pass in the lists we created above and pass them to the 'DataFrame' function of the pandas package. The 'DataFrame' function takes in a non-nested dictionary and returns a dataframe.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  class Scraper:
+
+      ...
+
+      def create_dataframe(self, rir, asn, prefix, starttime, endtime):
+          """
+          Takes generated lists (prefix, starttime, endtime) and creates a Pandas dataframe
+          """
+          cols = [
+              'RIRSOURCE',
+              'ASNID',
+              'IPPREFIX',
+              'STARTDATE',
+              'ENDTIME']
+
+          df = pd.DataFrame({
+              'RIRSOURCE': rir,
+              'ASNID': asn,
+              'IPPREFIX': prefix,
+              'STARTDATE': starttime,
+              'ENDTIME': endtime})
+          return df[cols] # Order the columns according to SQL tables
+          </code>
+        </pre>
+        <p>
+          Finally, we are done creating our 'Scrape' class and have all of our parser methods written. To bring it all together, we are going to create a final method called 'run_prefix_finder' that will create an instance of the Scrape object and call the methods above in sequence. We declare two additional variables, 'ASN' and 'Key' to be fed into this method. Once the method is done running, it returns our results as a dataframe, which we can easily write to a table in SQL.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  ASN = '1234'
+  KEY = 'data'
+
+  def run_prefix_finder(url, starttime, asn, key = None):
+      """
+      Function to run all functions in Scraper class in proper sequence
+      """
+      print(url)
+      print(starttime)
+      print(asn)
+      print(key)
+      scraperObj = Scraper(url, starttime, asn)
+      scraperObj.make_request()
+      produced_json = scraperObj.produce_json()
+      relevant_info = scraperObj.relevant_info(key)
+      flattened_json = scraperObj.flatten_json(relevant_info)
+      print(len(flattened_json))
+      prefixes = scraperObj.get_prefixes(flattened_json)
+      print(len(prefixes))
+      starttimes = scraperObj.get_starttimes(flattened_json, prefixes)
+      print(len(starttimes))
+      endtimes = scraperObj.get_endtimes(flattened_json, prefixes)
+      print(len(endtimes))
+      rir, asn = scraperObj.get_asn_rir(prefixes)
+      data = scraperObj.create_dataframe(rir, asn, prefixes, starttimes, endtimes)
+      for col in list(data.columns):
+          data[col] = data[col].astype(str)
+      return data
+          </code>
+        </pre>
+        <button onclick="toTop()" id="topButton" title="Go to Top">Top</button>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+      <script src='js/buttonTop.js' type="text/javascript"></script>
+    </main>
+  </body>
+
+</html>

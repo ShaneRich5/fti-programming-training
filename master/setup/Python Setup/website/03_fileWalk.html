@@ -1,0 +1,260 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li><a href="01_setup.html">Part 1: Set up</a></li>
+          <li><a href="02_basics.html">Part 2: Basics</a></li>
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 3: FileWalk</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#introFileWalk">Introduction</a></li>
+              <li><a href="#files">File Management</a></li>
+              <li><a href="#walk">Implement the Walk</a></li>
+              <li><a href="#copy">Doing Something</a></li>
+              <li><a href="#finalFileWalk">Final Product</a></li>
+            </ul>
+          </li>
+          <li><a href="04_timeKeeper.html">Part 4: TimeKeeper</a></li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li><a href="06_scrapy.html">Part 6: Web Scraping</a></li>
+          <li><a href="07_csvParsing.html">Part 7: CSV Parsing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="scripts/FileWalk.zip" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <div id="content">
+        <div class="container-fluid">
+          <h2>FileWalk</h2>
+          <p class="lead">Writing a non-trivial program</p>
+        </div>
+        <div class="container-fluid" id="introFileWalk">
+          <hr>
+          <h3>Introduction</h3>
+          <p class="lead">Write a program that handles directories and files</p>
+          <p>
+            Imagine you received a bunch of flat files from a client. In order to deal with them, we will write a program that implements a <em>file walk</em>. It will traverse every file contained within a target directory. As such, we could do any number of things to each file. In this example, we simply copy all files contained within one directory to another one.
+          </p>
+          <p>
+            While all we are showing here is the copy and paste mechanism, you could extend this program further in any number of ways. You could write it such that only files meeting some condition are moved. That is certainly better than manually selecting which files to copy. You could also use a file walk to generate a log or inventory of received files. Given that client data is often recieved as a collection of flat files, traversing these directories in Python can provide immediate value to many projects.
+          </p>
+          <p>
+            The first thing you should do is download the source code for this part of the tutorial. Unzip it to your Tutorial Project Folder. In it, you should see two directories called <code>directory0</code> and <code>directory1</code> as well as a Python file called <code>file_walk_demo.py</code>. Go ahead and create a new file in the PyCharm IDE (Remember: <code>Alt + Insert</code>) and call it <code>file_walk.py</code>. This will be your implementation of the same program contained in the downloaded Python file.
+          </p>
+          <p>
+            The first step in any program is to <code>import</code> our key dependencies. In this program, we will rely on two packages: <code>os</code> and <code>shutil</code>. The first provides a means by which Python can access the underlying Operating System, regardless whether you are on Windows, macOS, or Linux. The second package contains wrappers for Shell Scripting utility functions. We can tell Python to reference these dependencies as follows:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  import os
+  import shutil
+            </code>
+          </pre>
+          <p>
+            With all dependencies imported, we can proceed implementing the program. A file walk can be decomposed into three parts:
+            <ol>
+              <li><p>Handling file locations</p></li>
+              <li><p>Generating a list of files</p></li>
+              <li><p>Doing some kind of work on each file</p></li>
+            </ol>
+          </p>
+        </div>
+        <div class="container-fluid" id="files">
+          <hr>
+          <h3>File Management</h3>
+          <p class="lead">Point Python to the relevant directories and filepaths</p>
+          <p>
+            Now we have access to the modules, classes, and functions implemented in the <code>os</code> package. We can use the <code>os.getcwd()</code> function to return a full path to the <i>current working directory</i>. All scripts, data files, etc. are referenced by the system relative to this location. Using it avoids <i>hardcoding</i> a path to the FileWalk folder. As such, the program becomes more robust because other users can copy the project folder and run it as is.
+          </p>
+          <p>
+            Combining <code>os.getcwd()</code> with another function called <code>os.path.join()</code> allows the developer to create dynamic, system-agnostic paths to other files and directories. This function concatenates the elements of a file or directory path such that it is recognized on any operating system. Below, we create three variables that handle the relevant directories for this exercise. First, we store the current working directory in a variable called <code>root</code>. We then define paths to our project's subdirectories: <code>target_dir</code> and <code>output_dir</code>. Feel free to print these variables to see their values.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  root = os.getcwd()
+  target_dir = os.path.join(root, 'directory0')
+  output_dir = os.path.join(root, 'directory1')
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="walk">
+          <hr>
+          <h3>Implement the Walk</h3>
+          <p class="lead">Given the filepaths, let's start walking</p>
+          <p>
+            Now that the program can access the relevant directories, we can proceed generating a list of filepaths that we want to utilize. We can use the <code>os.walk()</code> function to pull the directory path, directory name, and filename for every file that exists within the target directory and all of its subdirectories. Using a for loop, we can iterate over each combination that exists in the target directory. Below, we simply print out every filename that exists in the directory defined by the variable <code>target_dir</code>.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      print(filenames)
+            </code>
+          </pre>
+          <p>
+            Notice that the loop prints two lists to the console log. This corresponds to the number of iterations that the loop performed because there are two directories that <code>os.walk()</code> had to traverse. These lists are also iterable, so we can actually nest a second for loop within the one we created to access each filename. Consider the following code:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          print(fname)
+            </code>
+          </pre>
+            <p>
+              We are essentially saying that for each directory we find, starting with <code>target_dir</code> and moving through its subfolders, print out every filename found therein. We see that this time, there are 4 lines in the log output, corresponding to how many iterations were executed.
+            </p>
+        </div>
+        <div class="container-fluid" id="copy">
+          <hr>
+          <h3>Doing Something</h3>
+          <p class="lead">Manipulating each file with Shutil</p>
+          <p>
+            Although closer, we still cannot manipulate the files in the code's current form. Each <code>fname</code> alone is not sufficient to point Python to the actual file. To solve this, we can use <code>os.path.join()</code> again to create the actual filepath by concatenating the directory and filepaths. This full path is exactly what Python needs to actually manipulate a file.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          print(os.path.join(dirpath, fname))
+            </code>
+          </pre>
+          <p>
+            Let's modify this code to finally copy all the flat files to the empty directory. This is where the <code>shutil</code> package comes in handy. Specifically, we will call the <code>shutil.copy2()</code> function. It expects a source filepath and a destination directory path. You can read more about the function <span class="link"><a href="https://docs.python.org/3/library/shutil.html#shutil.copy2" target="_self">here</a></span>. We will store a variable that updates on each iteration called <code>target_path</code>. This is the full filepath we printed out previously. We can then call the <code>shutil.copy2()</code> function which copies the files and their metadata to the destination directory we defined earlier.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          target_path = os.path.join(dirpath, fname)
+          shutil.copy2(target_path, output_dir)
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="finalFileWalk">
+          <hr>
+          <h3>Final Product</h3>
+          <p class="lead">Just some finishig touches</p>
+          <p>
+            Above is the bare minimum for an automated copy-paste script. While not necessary, below are a few additions we can include that make the script more robust. We will show two additions in code and then list a few other suggestions that we will leave the reader to solve on their own.
+          </p>
+          <p>
+            Before, we could only access the filepaths within the scope of the for loop. It could be useful to cache or store the filepaths for later use. We can use a list to store the filepaths as we walk through the directory. First, we instantiate an empty list before the loop begins via <code>[]</code> (read: bracket) notation. At each iteration, we can append each filepath to the list.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  cache = []
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          target_path = os.path.join(dirpath, fname)
+          cache.append(target_path)
+          shutil.copy2(target_path, output_dir)
+            </code>
+          </pre>
+          <p>
+             Furthermore, we take faith that all files were copied successfully. It would be a good idea to explicitely check this assumption. To check if a file exists at a given path, we can call the <code>os.path.isfile()</code> function. Note, we concatenate the current filaname to the output directory path. If it exists, we will print a success message. Otherwise, we notify the user. At this point, we have implemented a relatively robust file walk program.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  cache = []
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          target_path = os.path.join(dirpath, fname)
+          cache.append(target_path)
+          shutil.copy2(target_path, output_dir)
+          output_path = os.path.join(output_dir, fname)
+          if os.path.isfile(output_path):
+              print("Successfully Copied: ", fname)
+          else:
+              print("Unable to copy file: ", fname)
+            </code>
+          </pre>
+          <p>
+            Here are a few more ideas the reader can implement to make this program even more useful (Note, these may require additional dependencies):
+          </p>
+          <ul>
+            <li><p><b>Conditional Copy:</b> Only move files based on certain criteria</p></li>
+            <li><p><b>Inventory Log:</b> Generate and maintain a log of files manipulated by the program, maybe pulling metadata on each file</p></li>
+            <li><p><b>Preprocessing:</b> Clean each file progrematically and aggregate them into a single data store</p></li>
+            <li><p><b>Abstraction:</b> Rewrite this program in such a way that it is a reusable utility (as the <code>os</code> and <code>shutil</code> packages are)</p></li>
+          </ul>
+          <p>The final, annotated code:</p>
+          <pre class="prettyprint final-code">
+            <code>
+    """
+    This script demonstrates how to automate any task that needs to copy-paste a
+    large number of files from one directory to another with ease.
+    """
+
+    import os  # General OS-agnostic helper functions
+    import shutil  # Shell utilities
+
+    # Define target and output directories
+    root = os.getcwd()
+    target_dir = os.path.join(root, 'directory0')
+    output_dir = os.path.join(root, 'directory1')
+
+    # Perform file walk
+    cache = []  # Empty list to store filepaths
+    for (dirpath, dirnames, filenames) in os.walk(target_dir):
+        for fname in filenames:  # For every file in this directory, do...
+            target_path = os.path.join(dirpath, fname)  # Update target filepath
+            cache.append(target_path)  # Store target filepath in cache
+            shutil.copy2(target_path, output_dir)  # COPY file to output directory
+            output_path = os.path.join(output_dir, fname)  # Output filepath
+            if os.path.isfile(output_path):  # If copied file exists, good
+                print("Successfully Copied: ", fname)
+            else:  # Otherwise, bad
+                print("Unable to copy file: ", fname)
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid survey">
+          <hr>
+          <p>Help us improve this content by taking <span class="link"><a href="https://docs.google.com/forms/d/e/1FAIpQLSe9ItHqX4jwsJxAsdEVAIHuqKHZsQNfg37TiK1fDHBv6O7ZPg/viewform?usp=sf_link" target="_self">this section's survey!</a></span></p>
+        </div>
+        <button onclick="toTop()" id="topButton" title="Go to Top">Top</button>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+      <script src='js/buttonTop.js' type="text/javascript"></script>
+    </main>
+  </body>
+</html>

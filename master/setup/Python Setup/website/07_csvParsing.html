@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li><a href="01_setup.html">Part 1: Set up</a></li>
+          <li><a href="02_basics.html">Part 2: Basics</a></li>
+          <li><a href="03_fileWalk.html">Part 3: FileWalk</a></li>
+          <li><a href="04_timeKeeper.html">Part 4: TimeKeeper</a></li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li><a href="06_scrapy.html">Part 6: Web Scraping</a></li>
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 7: CSV Parsing</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#introCSV">Introduction</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="#" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <div id="content">
+        <div class="container-fluid" id="introCSV">
+          <h2>CSV Parsing</h2>
+          <p class="lead">CSVs are a common format encountered when dealing with raw data</p>
+          <hr>
+          <p>
+            A Comma Separated Value (CSV) File stores numbers and text as plain text, where each line of the file is a record and each record consists of one of more fields (or values) (<span class="link"><a href="https://en.wikipedia.org/wiki/Comma-separated_values">read more</a></span>).  Excel files are often saved as csv files when trying to limit space and transfer raw data between parties.  By default, csv file values are separated by commas; however, the delimiter can be changed, so we will discuss if that's the case as well.
+          </p>
+          <p>
+            CSV parsing can be very useful when we receive mass quantities of csv files in a standardized format and we don't want to manually review them to obtain the data we need.  For this section, we'll pretend we are receiving the same csv file format each week, and we want to extract all of the data out of it to push it to a sql database for storage and analysis.
+          </p>
+          <p>
+            As always, we'll start by importing our needed packages which we will discuss more as we go (<span class="link"><a href="https://docs.python.org/2/library/csv.html">read more</a></span>):
+          </p>
+          <pre class="prettyprint">
+            <code>
+  import csv
+  import pandas as pd
+  import da_py_mssql as sql
+            </code>
+          </pre>
+          <p>Next, we'll create a string for the location of the csv file on our computer that we want to parse:</p>
+          <pre class="prettyprint">
+            <code>
+  csv_path = os.path.join(os.getcwd(), 'path', 'to', 'csv.txt')
+            </code>
+          </pre>
+          <p>
+            As we'll be doing all of our coding with this file as our souce, we need to set this up.  If we were going to be looping through multiple csv files, we would probably want to start by putting this next section into a method to make it easily iterable; however, we won't be doing that for this example, so to do this without a method though, we'll simply set up our code like:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  with open(csv_path) as csv_file :
+      ...
+            </code>
+          </pre>
+          <p>
+            Now that we have our csv file opened, using the imported csv package, we can read it as a csv file and make it into a list records, which are each a list of values in themselves.  This step will make our parsing of values much easier going forward.  This step is also where we can clarify the delimiter (ex: tab is /t and pipe is '|').  We'll work this into our code as follows:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  with open(csv_path) as csv_file :
+      csv_reader = csv.reader(csv_file, delimiter= ",")
+      csv_list = list(csv_reader)
+            </code>
+          </pre>
+          <p>
+            Say that the original file was formatted in such a way where the data doesn't start until the third row and there is a date in the top right field of the file that we want to record with our data.  Since this is a standardized csv that we receive each week, we know the exact location of that value (we'll say first row and seven cells to the right); so, we'll refernce that location within the list of lists to pull out the value and assign it to a variable we'll use later:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  with open(csv_path) as csv_file :
+      csv_reader = csv.reader(csv_file, delimiter= ",")
+      csv_list = list(csv_reader)
+      extracted_date = csv_list[0][6]
+            </code>
+          </pre>
+          <p>
+            Now, let's say that we have a sql database containg a lot of previous data that we want to append with the data from this new csv file.  Although normally we could just make a dataframe with all of the data and send it to sql at once, we're going to send it to the sql database one line at a time for practice.  To do this, we will loop through all of the data records and make each record into a dataframe using the imported pandas package; then, we will send that dataframe of one record to sql using the da_py_mssql that FTI has developed.  We'll start by setting up our connection to the sql database sometime before we loop through the csv file.  Now setting up our loop, we will make it so that it goes through every record in our list of records and doesn't start sending data to sql until the third row (where we know the actual data starts).  Additionally, we're going to want to find a way to combine the record of data that we are on and the extracted date from the top of the csv that we saved; so, we will append this record of data into a list and append that record with the extracted date value.  With all of our data now in one location, we can make the whole list into a dataframe and send that dataframe to our sql database.  There are many different methods in the da_py_mssql package, so we'll need to pick the method that allows us to append data to an existing sql table, and add that at the end of our loop.  All together, this looks like the following:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  connectionObj = sql.Connect('SQL_Project_Database_Name', 'SQL_Project_Server_Name')
+  cnxn = connectionObj.connection()
+
+  with open(csv_path) as csv_file :
+      csv_reader = csv.reader(csv_file, delimiter= ",")
+      csv_list = list(csv_reader)
+      extracted_date = csv_list[0][6]
+
+      for row in range(len(mycsv)):
+          if row >= 2:
+              df_list = []
+              df_list.append(mycsv[row])
+              df_list[0].append(extracted_date)
+              df = pd.DataFrame(df_list)
+              connectionObj.append_data_from_frame(cnxn, df, 'SQL_Table_Name', 'dbo')
+              </code>
+          </pre>
+        </div>
+        <p>
+          Overall, the above code will open a csv file, extract and save a value from a specific location within that file, and loop through and send every row of data in that csv file to a sql database one row at a time.  Using the csv package and writing a simple code like this can be very helpful and time efficient in working with large quantities of likely structured csv files.
+        </p>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+      <script src='js/buttonTop.js' type="text/javascript"></script>
+    </main>
+  </body>
+</html>

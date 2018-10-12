@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="import" href="templates.html">
+
+    <title>Intro To Python</title>
+    <style>
+      .navbar { background-color: rgb(210, 207, 205); }
+      pre.prettyprint { border-radius: 5px; }
+      #header {
+        padding-top: 80px;
+        text-align: center;
+      }
+    </style>
+    <!--
+    Update Notes:
+    - DONE Make step 3 stand out
+    - Simpler install verification: test.bat "START C:\Miniconda3\python.exe"
+    - DONE Don't explain Venvs, just tell them to double click pdt-env.bat
+      - Link to Conda Envs Guide
+    - More clear IDE setup
+      - Tools -> Python Console
+    -->
+  </head>
+
+  <body>
+    <main class="container">
+      <div id="importContent"></div>
+
+      <script>
+        // Import templates
+        var link = document.querySelector('link[rel="import"]');
+        var templateNav = link.import.querySelector('#templateNav');
+        var templateHeader = link.import.querySelector('#templateHeader');
+        var templateIntro = link.import.querySelector('#templateIntro');
+
+        // Copy DOM nodes
+        var nodeNav = document.importNode(templateNav.content, true);
+        var nodeHeader = document.importNode(templateHeader.content, true);
+        var nodeIntro = document.importNode(templateIntro.content, true);
+
+        // Append nodes to page
+        document.querySelector('#importContent').appendChild(nodeNav);
+        document.querySelector('#importContent').appendChild(nodeHeader);
+        document.querySelector('#importContent').appendChild(nodeIntro);
+      </script>
+
+      <div class="container" id="setup">
+        <h3>Setting Up Python</h3>
+        <ol>
+          <li>Install Python (Miniconda)</li>
+          <li>Create a Conda Environment</li>
+          <li>Install PyCharm IDE</li>
+          <li>Getting Python Help</li>
+        </ol>
+        <br>
+        <h5>Install Python (Miniconda)</h5>
+        <p>
+          The set up process should be the same on both your AWS and local desktops (save the drive location). As such, we recommend going through this process for both systems. Having the ability to code in either environment is very useful. For example, Python and SQL can only be interoperable in the AWS environment. In other cases, it can be a good idea to keep a copy of a client project locally to isolate code from the primary folder.
+        </p>
+        <p>
+          We will use an open-source distribution of Python called Miniconda. It is a stripped down version of the widely popular Anaconda Data Science Platform. It provides tools for managing virtual environments and package dependencies, emphasizing reproducability and ease of use. Go ahead and download Miniconda from their website, <a href="https://conda.io/miniconda.html" target="_self">here</a>. There are several options, but choose the Python 3.x installer for the 64-bit version of Windows.
+        </p>
+        <img class="img-responsive" src="assets/DownloadMiniconda.png" alt="download" style="width: 100%">
+        <br>
+        <p>
+          Run the installer and go through the following steps:
+          <ol>
+            <li>Press Next and agree to the License Agreement.</li>
+            <li>Install locally ("Just Me").</li>
+            <br>
+            <b>IMPORTANT:</b>
+            <li>Change the Destination Folder to either:
+              <ul>
+                <li>On <i>local</i> desktop: <code>C:\Miniconda3</code></li>
+                <li>On <i>AWS</i> desktop: <code>D:\Miniconda3</code></li>
+              </ul>
+            <br>
+            <li>Press Next and make sure both Advanced Options are <b>not</b> selected.</li>
+            <li>Proceed with the installation</li>
+          </ol>
+        </p>
+        <div class="row">
+          <div class="col-4">
+            <img class="img-responsive" src="assets/MinicondaInstallType.png" alt="download" style="width: 100%">
+          </div>
+          <div class="col-4">
+            <img class="img-responsive" src="assets/MinicondaInstallLocation.png" alt="download" style="width: 100%">
+          </div>
+          <div class="col-4">
+            <img class="img-responsive" src="assets/MinicondaInstallOptions.png" alt="download" style="width: 100%">
+          </div>
+        </div>
+        <br>
+        <p>
+          After installation, we want to verify that your system is using the correct Python interpreter. We can do the following to be confident that the installation was successful:
+          <ol>
+            <li>Search for "Anaconda Prompt" under the Windows Start button and open the program</li>
+            <li>In the terminal, type <code>where python</code> and press enter.</li>
+              <ul><li>It should list at least one filepath containing <code>.../Miniconda3/python.exe</code>.</li></ul>
+              <ul><li>It may return multiple filepaths depending on whether or not you installed Python previously. This is okay.</li></ul>
+            <li>Now check conda's version by entering the following: <code>conda --version</code></li>
+            <li>We can also verify Python's version and distribution by entering: <code>conda --version</code></li>
+              <ul><li>It should print something similar to <code>Python 3.6.1 :: Continuum Analytics</code> or <code>Anaconda</code></li></ul>
+            <li>Finally, let's enter the Python shell by simply entering: <code>python</code></li>
+              <ul><li>For fun, type <code>print("Hello, World!")</code> and press enter</li></ul>
+              <ul><li>To exit the shell, enter <code>quit()</code>.</li></ul>
+          </ol>
+        <br>
+        <h5>Install PyCharm IDE</h5>
+        <p>
+          Now that Python and Conda are on our system, we want to install something called an Integrated Development Environment (IDE). The best way to think of an IDE is a text editor designed for a specific programming language. Such integration provides a lot of useful functionality that a general-purpose text editor does not have. While one could rely on a simple text-editor and the command-line, we found that using PyCharm is a similar experience to SQL Server Studio, an IDE of its own. You can write code, manage directories, and run programs in a single window. It has a decent code-completion feature which helps the user learn what functions are available as well as syntax highlighting. In short, IDEs are very advantageous for beginners learning a language as well as experts seeking to optimize their workflow.
+        </p>
+        <div class="row">
+          <div class="col-6">
+            <p>
+              First, download the <b>Community</b> version of PyCharm <a href="https://www.jetbrains.com/pycharm/download/#section=windows" target="_self">here</a>. Simply go through default settings and run it once finished installing. Feel free to set intitial configuration as you want. For example, I prefer the Monokai theme. Now select Create New Project. PyCharm will automatically create a Project folder for you. Within this folder, name the new project "Tutorial". Beneath the Location field is a field called Interpreter. It is crucial that you point PyCharm to <code>[C:|D:]/Miniconda3/python.exe</code> depending on which desktop you installed Miniconda on. Once you press Create, you will be taken to a blank screen. Before building the first program, we should cover two more topics: Project Organization and Finding Help.
+            </p>
+          </div>
+          <div class="col-6">
+            <img class="img-responsive" src="assets/DownloadPyCharm.png" alt="download" style="width: 100%">
+          </div>
+        </div>
+        <h5>Find Programming Help</h5>
+        <p>
+          Before getting into the code, we need to cover one more important topic: getting help. One function of this tutorial is to spark experimentation with Python. This implies that unforseen problems and questions will arise. Therefore we included some strategies and resources for asking the right questions and finding potential solutions. If you are familiar with SQL, then this will not differ much from how you might search for answers in that context. Python, like SQL, has a massive community with loads of valuable insights and experience that is all readily available online!
+        </p>
+        <p>Below are the most common ways people try to find answers to their questions and learn more doing so:
+          <ul>
+            <li>Targeted Google Searches - ask yourself what search terms capture your question or problem.</li>
+            <li>StackOverflow - We recommend creating an account and posting questions, although your question was probably asked already!</li>
+            <li>Tech blogs - There are tons out there but look into top lists of blogs or newletters. Medium, Data Science Weekly, Hacker News, and Hacker Noon are all good collections of blog posts related to computer science, analytics, and programming.</li>
+            <li>Educational Platforms - Check out the free tier of Data Camp, Codecademy, Khan Academy, and more for basic introductions to Python.</li>
+            <li>GitHub Repositories - One of the most valuable ways to learn is to dive into the source code of real-world projects. GitHub is an online platform and community for sharing, hosting, and developing open-source projects.</li>
+          </ul>
+        </p>
+        <p> Below are links to some useful resources which are by no means exhaustive nor in any particular order:
+          <ul>
+            <li><a href="https://google.github.io/styleguide/pyguide.html" target="_self">Google's Python Style Guide</a> - A style guide used by Google that follows the best practices outlined by the PEP8 rules, an unofficial standard for coding in Python. Writing clean and consistent code is paramount in collaborative settings. No need to reinvent the wheel as such "best practices" already exist.</li>
+            <li><a href="https://github.com/jakevdp/WhirlwindTourOfPython" target="_self">Whirlwind Tour of Python</a> - A quick introduction to basic constructs in the Python programming language. This is an example-driven collection of Python fundamentals</li>
+            <li><a href="https://github.com/jakevdp/PythonDataScienceHandbook" target="_self">Python Data Science Handbook</a> - By the same author as above, he introduces fundamental tools for Data Science in Python.</li>
+            <li><a href="http://www.pythonforbeginners.com/" target="_self">Python For Beginners</a> - This blog contains a lot of useful tid bits for learning Python.</li>
+            <li><a href="https://automatetheboringstuff.com/" target="_self">Automate the Boring Stuff with Python</a> - Probably the single most useful collection of Python tutorials as they relate to automating work done by the typical FTI consultant.</li>
+          </ul>
+        </p>
+      </div>
+      <hr>
+      <div class="container" id="program-0">
+        <h3>Program_0: FileWalk</h3>
+        <p>
+          The first program that we will cover performs a file walk. This means Python will create a list of files within a given directory. Such a list allows us to manipulate them efficiently. For example, we could simply log all files in a directory or we could move/copy the files to another directory. We can break this problem into three parts: handling file locations, generating a list of files, and then doing some kind of work on each file. Let's assume the following project folder structure:
+        </p>
+        <pre>
+  FileWalk/
+  |    file_walk.py
+  |____directory0/
+  |        test0.txt
+  |        test1.txt
+  |        test2.txt
+  |________subdir/
+  |            subtest0.txt
+  |____directory1/
+        </pre>
+        <p>
+          We have a project folder, FileWalk, that contains a Python script called <code>file_walk.py</code> and two directories. One of the directories has several dummy data files and the other directory is empty. Note, because Python is zero-indexed (start counting at zero instead of one), we number files as such just to familiarize the concept a bit, although not necessary.
+        </p>
+        <p>
+          Python has a package called <code>os</code> which contains general functionality for interfacing with the operating system. You can find the documentation <a href="https://docs.python.org/3/library/os.html", target="_self">here</a>. Another package we can make use of is called <code>shutil</code> which provides Python with an interface to Windows Shell commands. Before we can access any of this functionality, we must first tell Python to reference the packages' source code. We do so by using the <code>import</code> keyword followed by the name of the package. Any dependency that your script relies on should always be <code>import</code>ed at the top of your script. This makes it clear to someone else working on your script what dependencies exist.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  import os
+  import shutil
+          </code>
+        </pre>
+        <p><i>NOTE: Code-blocks are not images so they can be copied from the browser as text into your IDE!</i></p>
+        <p>
+          Now we have access to the modules, classes, and functions implemented in the <code>os</code> package. We can use the <code>os.getcwd()</code> function to return a full path to the <i>current working directory</i>. All scripts, data files, etc. are referenced by the system relative to this location. Using it avoids <i>hardcoding</i> a path to the FileWalk folder. As such, the program becomes more robust because other users can copy the project folder and run it as is.
+        </p>
+        <p>
+          Combining <code>os.getcwd()</code> with another function called <code>os.path.join()</code> allows the developer to create dynamic, system-agnostic paths to other files and directories. This function concatenates the elements of a file or directory path such that it is recognized on any operating system. Below, we create three variables that handle the relevant directories for this exercise. First, we store the current working directory in a variable called <code>root</code>. We then define paths to our project's subdirectories: <code>target_dir</code> and <code>output_dir</code>. Feel free to print these variables to see their values.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  root = os.getcwd()
+  target_dir = os.path.join(root, 'directory0')
+  output_dir = os.path.join(root, 'directory1')
+          </code>
+        </pre>
+        <p>
+          Now our script has the ability to access both directories. Furthermore, if the name of the directory changes, it is a very simple edit without worrying about the absolute location of the script as it is relative to the current working directory. We now have everything needed to generate a list of filepaths. We can use the <code>os.walk()</code> function to pull the directory path, directory name, and filename for every file that exists within the target directory and its subdirectories. We can consider each combination therein using a programming construct called a For Loop. It iterates over each element in some collection of elements called an <i>iterable</i>.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      print(filenames)
+          </code>
+        </pre>
+        <p>
+          Notice that the loop prints two lists to the console log. This corresponds to the number of iterations that the loop performed because there are two directories that <code>os.walk()</code> had to traverse. Now, these lists are also iterable, so we can actually nest a second for loop within the one we created to access each filename. Consider the following code:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          print(fname)
+          </code>
+        </pre>
+        <p>
+          We are essentially saying that for each directory we find, starting with <code>target_dir</code> and moving through its subfolders, print out every filename found therein. We see that this time, there are 4 lines in the log output, corresponding to how many iterations were executed. Although closer, we still cannot manipulate the files in their current form. Each  <code>fname</code> is not enough to point Python to the actual file. We can use <code>os.path.join()</code> again to create the actual filepath that points the file on the operating system. This full path is exactly what Python needs to actually manipulate the file.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          print(os.path.join(dirpath, fname))
+          </code>
+        </pre>
+        <p>
+          Let's modify this code to do something more useful than printing out the full file path. Remember the second directory is empty, so why don't we copy all the data files to it? This is where the <code>shutil</code> package comes in handy. Specifically, we will call the <code>shutil.copy2()</code> function. It expects a source filepath and a destination path. You can read more about the function <a href="https://docs.python.org/3/library/shutil.html#shutil.copy2" target="_self">here</a>. We will store a variable that updates on each iteration called <code>target_path</code> which is the full path we printed in the last block. We can then call the <code>shutil.copy2()</code> function which copies the files and their metadata to the destination directory we defined earlier.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          target_path = os.path.join(dirpath, fname)
+          shutil.copy2(target_path, output_dir)
+          </code>
+        </pre>
+        <p>
+          That's the bare minimum for an automated copy-paste script. While not necessary, below are a few additions we can include that make the script more robust. Before, we could only access the filepaths within the scope of the for loop. It could be useful to cache or store the filepaths for later use. Furthermore, we take faith that all files were copied successfully. It would be a good idea to explicitely check this assumption.
+        </p>
+        <p>
+          We can use a data strcuture called a list to store the filepaths. We instantiate an empty list via <code>[]</code> (read: bracket) notation before the loop begins. During each iteration, we append values to the list. To check if a file exists at a given path, we can call <code>os.path.isfile()</code> function. If it exists, we will print a success message. Otherwise, we notify the user.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  cache = []
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:
+          target_path = os.path.join(dirpath, fname)
+          cache.append(target_path)
+          shutil.copy2(target_path, output_dir)
+          output_path = os.path.join(output_dir, fname)
+          if os.path.isfile(output_path):
+              print("Successfully Copied: ", fname)
+          else:
+              print("Unable to copy file: ", fname)
+          </code>
+        </pre>
+        <p>
+          See the entire script below. Comments are represented by the <code>#</code> and are not executed by the Python interpreter. We can also place comment blocks between <code>"""..."""</code> which can span multiple lines.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  """
+  This script demonstrates how to automate any task that needs to copy-paste a
+  large number of files from one directory to another with ease.
+  """
+
+  import os  # General OS-agnostic helper functions
+  import shutil  # Shell utilities
+
+  # Define target and output directories
+  root = os.getcwd()
+  target_dir = os.path.join(root, 'directory0')
+  output_dir = os.path.join(root, 'directory1')
+
+  # Perform file walk
+  cache = []  # Empty list to store filepaths
+  for (dirpath, dirnames, filenames) in os.walk(target_dir):
+      for fname in filenames:  # For every file in this directory, do...
+          target_path = os.path.join(dirpath, fname)  # Update target filepath
+          cache.append(target_path)  # Store target filepath in cache
+          shutil.copy2(target_path, output_dir)  # COPY file to output directory
+          output_path = os.path.join(output_dir, fname)  # Output filepath
+          if os.path.isfile(output_path):  # If copied file exists, good
+              print("Successfully Copied: ", fname)
+          else:  # Otherwise, bad
+              print("Unable to copy file: ", fname)
+          </code>
+        </pre>
+      </div>
+      <hr>
+      <div class="container" id="program-1">
+        <h3>Program_1: TimeKeeper</h3>
+        <p>
+          Our next program can prove immediately useful. We are going to build a basic time keeper. We only need two files, a script called <code>timer.py</code> and an Excel workbook called <code>timesheet.xlsx</code>. This log should already be created with the first row containing the following headers: Date, Projects, Matter ID, Time (hrs), and Description. Below is the project folder structure:
+        </p>
+        <pre>
+  FileWalk/
+  |    timer.py
+  |    timesheet.xlsx
+        </pre>
+        <p>TimeKeeper should have the following functionality:</p>
+        <ul>
+          <li>Record user input on the project name, matter ID, and narrative.</li>
+          <li>Record the elapsed time between the start and end of a task.</li>
+          <li>Record the time and project information in an Excel log.</li>
+        </ul>
+        <p>
+          As always, we should begin our script by <code>import</code>ing dependencies. We are introducing new syntax with the <code>as</code> keyword and the <code>from ... import</code> contruct. Something you will notice with Python is the extensive use of something called dot-notation. Without getting into the weeds, the dot is Python's way of accessing some sort of functionality contained within an object. It can become cumbersome to always write out the original name so we are able to alias them using the <code>as</code> keyword.
+        </p>
+        <p>
+          A lot of packages are very large projects and sometimes you may only need a specific module from it. That is why we use the <code>from ... import</code> contruct. We are telling Python to essentially ignore everything else contained in that package and only reference the object we specify. Now, these two statements are the same: <code>import pckgname.module</code> = <code>from pckgname import module</code> but the latter is more explicit and therefore preferred.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  import os
+  import time as t
+  import openpyxl as xl
+
+  from datetime import datetime as dt
+          </code>
+        </pre>
+        <p>
+          You should recognize the <code>os</code> package from the previous program. We will use it in a similar way in TimeKeeper as well. Next is the <code>time</code> module which will be the main driver in actually keeping the time for TimeKeeper. <code>openpyxl</code> is a very versatile tool for interfacing Python and Excel. This is going to handle logging the time. Finally, we import the <code>datetime</code> module from the <code>datetime</code> package. Instead of asking the user for the date, TimeKeeper can use this module to infer the date.
+        </p>
+        <p>
+          Now we can tackle the first section of our program that takes user input. Every time entry requires the following metadata: a project name, the matter ID, a narrative of the work done, and the date. The first three we will ask the user directly but our program can assume the date is today. Python comes with a convenient function called <code>input()</code> that takes a string as its argument and returns whatever the user types. We'll ask the user to provide the project name, matter ID, and narrative. We store each response as its own variable for later use. We can then call the <code>dt.today()</code> function to store the date.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  project = input("What is the name of your project?\n")
+  matter_id = input("What is the Matter ID?\n")
+  description = input("Type your narrative here:\n")
+  date = dt.today().strftime('%m/%d/%Y')
+          </code>
+        </pre>
+        <p>
+          Note what we are doing after calling the <code>dt.today()</code> function. We are using something called a method, a type of function that is tied to a specific object. In this case, the <code>dt.today()</code> function return a <code>Date</code> object. Every <code>Date</code> object has access to a method called <code>datetime.Date.strftime()</code>. This method allows the user to format a date as a string of text. A lookup table for what each symbol used in the method can be found <a href="http://strftime.org/" target="_self">here</a>. We are formatting the date as short month, short day, and long year.
+        </p>
+        <p>
+          Now that we have the meta data for each time entry, let's focus on actually recording the elapsed time spent on an entry. The basic idea is to measure the elapsed time as the difference between two timestamps: when the task is done minus when the task started. How do we determine the start and end of a task? We can make two assumptions. First, the task starts after the user inputs the project information. Second, we assume the task is done when the user presses any key to terminate the counter. Also, we get the timestamp from the <code>t.time()</code> function.
+        </p>
+        <p>
+          What would the code look like? First, we save the current time and declare a helper variable. We can then make use of a construct called a While Loop. It iterates over some logic as long as a condition holds <code>True</code>. The crucial aspect of a while loop is that we should always check whether or not the condition is still valid. If it is, then explicitely <code>break</code> the loop. Not doing so leaves a possibility that the loop will run forever, hence the proverbial infinite loop.
+        </p>
+        <p>
+          Specifically, we create a stop variable and leave it empty (denoted by <code>None</code>). As long as this variable is empty, we want to prompt the user to stop counting. If the value of <code>stop</code> is no longer <code>None</code>, we save the time, calculate the elapsed time, print a notification, and exit the loop with a <code>break</code> statement. Calculating the time difference takes a bit of effort. The <code>t.time()</code> function returns a floating point number representing <i>seconds</i>. We can convert seconds to hours by dividing by 3600 (60 seconds in 60 minutes). Finally, we use a function available in base Python (no imports needed) to round to the nearest two decimal places.
+        </p>
+        <pre class="prettyprint">
+          <code>
+  stop = None
+  tic = t.time()
+  while stop is None:
+      stop = input("Press any key to stop...")
+      if stop is not None:
+          toc = t.time()
+          elapsed_time = round((toc - tic) / 3600, 2)
+          print("{0:.2f}hrs Elapsed...".format(elapsed_time))
+          break
+          </code>
+        </pre>
+        <p>
+          Finally, lets output the time entry to our Excel log. The <code>openpyxl</code> package is an interface between Python and Excel that has the capability to load a workbook and edit active wrksheets. First, we need to point Python to the location of the workbook in our project folder using the same trick as the previous program. Then we can organize the metadata as a list. Like before, we create a list with <code>bracket</code> notation. This time, we are putting variables inside of the brackets. We are also <i>coercing</i> the data types to string to make sure they are written to Excel as text.
+        </p>
+        <p>
+          First, we call the <code>openpyxl.load_workbook()</code> function. It returns an object that contains methods for accessing elements of the workbook. Specifically, we can call the <code>wb.get_active_sheet()</code> method for manipulating the active worksheet within a workbook. We can now call the worksheet's <code>ws.append()</code> method to add our data to the last row of the sheet. Finally, we use the <code>wb.save()</code> to save the entire workbook. An important note is that the program cannot edit the workbook if you have it open!
+        </p>
+        <pre class="prettyprint">
+          <code>
+  root = os.getcwd()
+  timesheet = os.path.join(root, 'timesheet.xlsx')
+  row = [str(date), project, str(matter_id), str(elapsed_time), description]
+  wb = xl.load_workbook(timesheet)
+  ws = wb.get_active_sheet()
+  ws.append(row)
+  wb.save(timesheet)
+          </code>
+        </pre>
+        <p>
+          That's all there is to writing a simple time keeper. This project had more complexity than the first one, but with practice and effort, Python can become a very useful tool for automating simple tasks like manipulating files and time keeping. The full code for TimeKeeper can be found below:
+        </p>
+        <pre class="prettyprint">
+          <code>
+  """
+  Record project information and elapsed time to an Excel time sheet.
+  """
+  import os  # Handles paths
+  import time as t  # Record time
+  import openpyxl as xl  # Interface with Excel
+
+  from datetime import datetime as dt  # Get today's date and format it
+
+
+  # Record user input
+  project = input("What is the name of your project?\n")
+  matter_id = input("What is the Matter ID?\n")
+  description = input("Type your narrative here:\n")
+  date = dt.today().strftime('%m/%d/%Y')  # Get and format date
+
+  stop = None  # Helver variable to control the while loop
+  tic = t.time()  # Starting keeping the time
+  while stop is None:
+      stop = input("Press any key to stop...")  # Prompt user while condition holds
+      if stop is not None:  # Condition no longer True when user presses a key
+          toc = t.time()  # Store the time and calculate the difference
+          elapsed_time = round(toc - tic, 2)
+          print("{0:.2f}hrs Elapsed...".format(elapsed_time))
+          break  # Exit the loop!
+
+  root = os.getcwd()
+  timesheet = os.path.join(root, 'timesheet.xlsx')  # Point to the time sheet
+  # Store the data in list data structure
+  row = [str(date), project, str(matter_id), str(elapsed_time), description]
+  wb = xl.load_workbook(timesheet)  # Load the time sheet
+  ws = wb.get_active_sheet()  # Tell Python to work with the active sheet
+  ws.append(row)  # Append the row to the time sheet
+  wb.save(timesheet)  # Save these changes
+          </code>
+        </pre>
+      </div>
+    </main>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+  </body>
+</html>

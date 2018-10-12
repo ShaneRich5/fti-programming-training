@@ -1,0 +1,470 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Intro To Python</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/ce3564fd0f.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  </head>
+  <body>
+    <main class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Intro to Python for Consultants</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <li><a href="01_setup.html">Part 1: Set up</a></li>
+          <li>
+            <a href="#sectionSubmenu" data-toggle="collapse" aria-expanded="false">Part 2: Basics</a>
+            <ul class="collapse list-unstyled" id="sectionSubmenu">
+              <li><a href="#run">How to Run</a></li>
+              <li><a href="#syntax">Python Semantics</a></li>
+              <li><a href="#structs">Data Structures</a></li>
+              <li><a href="#logic">Conditional Logic</a></li>
+              <li><a href="#iters">Iteration</a></li>
+              <li><a href="#fileIO">File I/O</a></li>
+              <li><a href="#strings">String Manipulation</a></li>
+              <li><a href="#imports">Modules and Packages</a></li>
+              <li><a href="#funcs">Functions and Abstraction</a></li>
+            </ul>
+          </li>
+          <li><a href="03_fileWalk.html">Part 3: FileWalk</a></li>
+          <li><a href="04_timeKeeper.html">Part 4: TimeKeeper</a></li>
+          <li><a href="05_pandas.html">Part 5: Pandas vs SQL</a></li>
+          <li><a href="06_scrapy.html">Part 6: Web Scraping</a></li>
+          <li><a href="07_csvParsing.html">Part 7: CSV Parsing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li><a href="#" class="download" download>Download Source Files</a></li>
+        </ul>
+        <div class="sidebar-footer">
+          <img src="assets/logo.svg" alt="logo">
+        </div>
+      </nav>
+      <div id="content">
+        <div class="container-fluid">
+          <h2>Basics</h2>
+          <p class="lead">Familiarize yourself with Python fundamentals</p>
+          <br>
+          <p>NOTE: Most of this information is expanded upon in the following material online that can be <span class="link"><a  href="https://jakevdp.github.io/WhirlwindTourOfPython/index.html">found here</a></span>.</p>
+          <blockquote>
+            <p><em>A Whirlwind Tour of Python</em> by Jake VanderPlas (O’Reilly). Copyright 2016 O’Reilly Media, Inc., 978-1-491-96465-1</p>
+          </blockquote>
+        </div>
+        <div class="container-fluid" id="run">
+          <hr>
+          <h3>How to Run</h3>
+          <p class="lead">Wait, how do you actually run Python code?</p>
+          <p>
+            Before we build anything, we should learn some basic concepts about Python. A good place to start would be figuring out how to run, or execute, code. There are two primary ways we can run code: line by line or in self-contained scripts called modules. Sometimes, executing lines is sufficient for answering a quick and simple question (much like a SQL query). Other times, the problem at hand is simply too complex to manage with line-by-line executions. Such problems can be broken down into modules, denoted by the <code>.py</code> file extension. Indeed, the ability to abstract components of a broader problem is what makes programming so powerful.
+          </p>
+          <div class="row align-items-center">
+            <div class="col-6">
+              <p>
+                If you followed <span class="link"><a href="setup.html">Part 1</a></span>, then you should have what's called the Python Interpreter pinned to the bottom of the PyCharm window. We can enter commands here line by line. For example, we could do some quick math and get its ouput right away. We can also create variables that store a value at the command-line as well. We are also able to call functions. Overall, this is a very simple way of executing single lines of code with an immediate response.
+              </p>
+            </div>
+            <div class="col-6">
+              <img src="assets/basics/pythonInterpreter.png" alt="pyShell">
+            </div>
+          </div>
+          <br>
+          <div class="row align-items-center">
+            <div class="col-12">
+              <p>
+                For something more involved, we might consider creating a Python file that can be run all at once. Take for example a module called <code>hello.py</code>. This code will prompt the user for their name and greets them accordingly. To run this simple program, you can press the green arrow at the top right corner of the PyCharm window. You can also right click anywhere on the script and select <code>Run 'hello'</code>. To create a new file, use this hotkey: <code>Alt + Insert + Enter</code> or by right clicking on the Project folder in the explorer.
+              </p>
+              <pre class="prettyprint">
+
+  # This is a file called: hello.py (# denotes comments)
+  user_input = input("Please type your name: ")  # Store the user input in a viarable
+  print("Hello, {}!".format(user_input))  # Return a formatted string of text characters
+
+              </pre>
+              <p>
+                 There is a third, hybrid approach that really only applies to the PyCharm IDE. It allows the developer to run a chunck of code within a module. PyCharm calls this trick "Execute Selection in Console". Simply highlight the desired code and then use the hotkey: <code>Alt + Shift + E</code> or right click and select <code>Execute Selection in Console</code>. This is similar to how we tend to run code in SQL Studio. Pro-tip: re-map the "Execute Selection in Console" hotkey to <code>Alt + X</code> as to match the hotkey in SQL Studio (look under Settings -> Keymap). While running blocks of code is both fast and familiar, writing self-contained modules is best practise as problem grow in scope and complexity.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" id="syntax">
+          <hr>
+          <h3>Python Semantics</h3>
+          <p class="lead">This is a language, afterall</p>
+          <p>
+            One of the most important aspects of writing Python is that indentation matters. There are several programming constructs that will be introduced that depend on it. The scope of code is also defined by indentation. That is to say, pay attention to where an indent is included because it is likely that the code will not behave as expected or not run at all without the correct aligntment. Indentations are generally four whitespaces, but the tab usually works the same.
+          </p>
+          <div class="row">
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  # GOOD
+  x = 5
+  if x > 0:
+      print('x is positive')
+  else:
+      print('x is negative')
+                </code>
+              </pre>
+            </div>
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  # BROKEN
+  x = 5
+  if x > 0:
+  print('x is positive')
+  else:
+  print('x is negative')
+                </code>
+              </pre>
+            </div>
+          </div>
+          <p>
+            Variable assignment is very easy in Python. If you have ever declared a variable in SQL, you had to define its data type before assigning its value. Many languages are like this but Python tries to <em>infer</em> the data type for you. As such, you simply write the name of the variable followed by an equals sign and the value to be assigned.
+          </p>
+          <p>
+            Operators are a fundamental part of any programming language as well. While the typical operators like <code>+, -, *, /</code> work as expected, below are a few other operators available:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  x = 5
+  # Arithmetic Operators
+  x // 2  # returns 2 Floor Division - Remove the remainder
+  x % 2  # returns 1 Modulus - Remainder of a division
+  x ** 2  # returns 25 Exponentiation - Raise x to the power of n
+  -x  # returns -5 Negation - Return the negative of x
+
+  # Comparison and Boolean Operators
+  x == 5  # return True
+  x > 0  # returns True
+  x < 0  # returns False
+  (x > 0) or (x < 0)  # returns True
+  (x > 0) and (x < 0)  # returns False
+  not (x < 10)  # returns False
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="structs">
+          <hr>
+          <h3>Data Types and Structures</h3>
+          <p class="lead">The building blocks of doing anything useful</p>
+          <p>
+            Most of the data types you may be used to seeing in SQL or Excel are also available in Python. Data types like Integers (<code>int</code>), Floats (<code>float32</code>), Varchars/Strings/Text (<code>str</code>), and Booleans (<code>bool</code>) are all basic data types in Python. On top of these, there are what are known as data structures. These are essentially containers for the aforementioned data types. The most prevalent of these is the <code>list</code>. It is denoted by square brackets wherein each <em>element</em> is seperated by a comma. There are many things that we can do with lists as follow:
+          </p>
+          <pre class="prettyprint">
+            <code>
+  x = [1, 2, 3]
+  len(x)  # Returns the Length of a list, in this case, 3
+  x.append(4)  # Adds a new element to the same list
+  x.extend([5, 6, 7])  # Adds each element of another list to the target list
+  x.sort(reverse=True)  # Sorts the list in reverse order
+            </code>
+          </pre>
+          <p>
+            An important concept to understand when using data structures like a list is <em>indexing</em>. It is the ability to access any element of an array by its position. So if I want to do something with the first element, I can access it by its index likeso: <code>my_list[0]</code>. The important thing here is that Python is zero-indexed, meaning the language starts counting at 0, <b>not</b> 1! Therefore, the <em>second</em> element is at index, or position, 1 as such: <code>my_list[1]</code>. Also, the colon operator allows us to pull ranges within the list, referred to as <em>slicing</em>. We can also assign values to specific indexes. This would look something like this: <code>x[0] = 100</code>.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  x[0:3]  # Returns [1, 2, 3]
+  x[:3]  # Shorthand for the same result
+  x[-1]  # Returns the last element, 7
+  x[:-3]  # Return the last 3 elements as a list
+  x[2:4]  # Return a subset from the middle of the list
+  x[::-1]  # This special syntax will reverse the list
+            </code>
+          </pre>
+          <p>
+            Another useful data structure is called a <code>dictionary</code>. It is essentially a mapping between a named key and its value. The concept of a dictionary is the basis for an extremely versatile and popular data processing and analysis package called <code>pandas</code>. Unlike a list, a Python <code>dictionary</code> is denoted with curly braces and each element is comprised of a <code>key:value</code> pair. Below is an example that represents some table wherein each field is a key that maps to an array of values.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  datatable = {
+    'col1': [10, 2, 30, 5],
+    'col2': ['NJ', 'DC', 'VA', 'CA'],
+    'col3': [600, 50, 100, 750]
+  }
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="logic">
+          <hr>
+          <h3>Conditional Logic</h3>
+          <p class="lead">If and only if this is true, do something</p>
+          <p>
+            These are statements that require a condition to be met for a certain block of code to be executed. The most basic conditional statement is the <code>if</code> statement; it checks if a condition is true (i.e. <code>x == 20</code>), then the following indented line or lines are executed. If the condition is not true, the indented lines are skipped and the next non-indented line is run.
+          </p>
+          <p>
+            You may choose to include the optional <code>else</code> and <code>elif</code> statements along with the <code>if</code> statement. An else statement designates a block of code to be run when the condition in the if statement isn’t met. Elif statements work the same way as if statements, but are placed in between the if and else statements to test for multiple conditions before resorting to the else block of code.
+          </p>
+          <div class="row">
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  x = 20
+
+  if x > 0:
+      print("x is positive")
+  else:
+      print("x is negative")
+
+
+                </code>
+              </pre>
+            </div>
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  x = 20
+
+  if x > 0:
+      print("x is positive")
+  elif X < 0:
+      print("x is negative")
+  else:
+      print("x is zero")
+                </code>
+              </pre>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" id="iters">
+          <hr>
+          <h3>Iteration</h3>
+          <p class="lead">Repeat code again, and again, and again...</p>
+          <p>
+            Many programming problems tend to require repetitive actions. Rather than writing the same commands over and over again, programming languages have the ability to perform iterative processes. These contructs are called Loops and they come in different flavors. In Python, it is sufficient to understand the <code>For Loop</code> and <code>While Loop</code>. The first will repeat a set of executions for <code>n</code> number of iterations. The latter construct will instead perform a set of executions <em>for as long as some condition is true</em>.
+          </p>
+          <p>Consider an example where we have a list of names. We would like our program to simply greet each person. The novice solution would simply repeat the code for each and every name in the list. Instead, we can just tell Python, for each name in this container, execute the following code:
+          <div class="row">
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  # Good Solution
+  names = ['Holly', 'Wayne', 'Peter']
+  for name in names:
+      print('Hello, ', name)
+
+                </code>
+              </pre>
+            </div>
+            <div class="col-6">
+              <pre class="prettyprint">
+                <code>
+  # Bad Solution
+  names = ['Holly', 'Wayne', 'Peter']
+  print('Hello, ', names[0])
+  print('Hello, ', names[1])
+  print('Hello, ', names[2])
+                </code>
+              </pre>
+            </div>
+          </div>
+          <p>
+            While three elements in a list is trivial, imagine if there were 100 or 1,000 or 1,000,000 names, files, rows, or anything where you had to repeat some set of actions! Throwing conditional logic into the mix is also a powerful concept. We can do so using a <code>While Loop</code>. Here, we are telling Python that so long as some condition is valid, repeat some set of actions. Let's say we want to prompt the user for an input value. It must be an integer, so as long as the user inputs a non-integer we will continue prompting them again.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  while True:
+      try:
+          user_input = int(input("Give me a whole number: "))
+      except ValueError:
+          print("Sorry, that's not a number!")
+          continue
+      else:
+          break
+  print("Was your number: ", user_input, "?")
+            </code>
+          </pre>
+          <p>
+            Although it seems like a lot is going on, this block of code is simply asking for a number. It checks if it is indeed a number. If not, it prompts the user again. Otherwise, it moves on. Notice the semantics of the code. Python will <code>try</code> to coerce the input into an integer data type. If doing so is not possible because the user input something other than a number, it raises a <code>ValueError</code> and will <code>continue</code> to prompt the user again. Once the user inputs a number, the code will <code>break</code>, or exit, from the loop.
+          </p>
+        </div>
+        <div class="container-fluid" id="fileIO">
+          <hr>
+          <h3>File Input-Output</h3>
+          <p class="lead">Reading and writing with Python</p>
+          <p>
+            Reading the contents of files into Python is extremely common. Likewise, writing Python objects out to files is also common. The Python language has several built-in primitives for file input-ouput. That said, it is also very common to use third-party packages to do similar tasks as well. That said, the concepts here will translate to those applications.
+          </p>
+          <p>
+            Let's pretend that there is a pipe-delimited text file in the same directory as your Python file. As such, we would like to store its contents in memory and peform some preprocessing and analysis on it. The general paradigm for accessing these contents is by using the <code>with open(filepath, 'r') as f</code> construct. This tells Python to open the file at a given location and enter "read" mode. We assign an alias, <code>f</code>, for easy reference. Within the scope of this block, we can proceed to read in the text data line by line, splitting each row by the known delimiter.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  fpath = "path/to/file.txt"
+  data = []
+  with open(fpath, 'r') as f:
+      for row in f:
+          data.append(row.split(r'\t'))
+            </code>
+          </pre>
+          <p>
+            Likewise, we may have some data that was processed or analyzed in Python and we would like to <em>persist</em> this object to memory; that is, we want to save it so when Python closes, we do not lose this information. We can use a very similar construct, excpet we feed the <code>open()</code> function a path to a file we want to create and enter "write" mode. Note, this will <b>overwrite</b> the file in this path. to avoid that, you can also enter "append" mode (denoted by <code>'a'</code>).
+          </p>
+          <pre class="prettyprint">
+            <code>
+  fpath = "path/to/new_file.txt"
+  data = ['some', 'data', 'to', 'write']
+  with open(fpath, 'w') as f:
+      for row in data:
+          f.write(row + '\n')
+            </code>
+          </pre>
+          <p>
+            Notice we are iterating over the data we want to write whereas before we were iterating over the file object itself. Furthermore, we explicitely need to concatenate the end-of-line token, in this case a newline-feed (denoted as <code>'\n'</code>). If writing data like this, it is also a good idea to make sure each row is a string data type, otherwise this concatenation will fail. In the next section, you will see a trick for adding in delimiters as well. Note, however, there are many third party packages that abstract these low-level implementation details when working with standard data formats suchas <code>csv</code> or <code>JSON</code>. When that is not the case, however, knowing how to read and write raw data at a lower level is valuable.
+          </p>
+        </div>
+        <div class="container-fluid" id="strings">
+          <hr>
+          <h3>String Manipulation</h3>
+          <p class="lead">How do we deal with text?</p>
+          <p>
+            Dealing with text is a very common task in any programming language. A lot of data, for example, will be stored as text and knowing how to extract information from it is very powerful. This falls under a much larger topic called Regular Expressions but even knowing its basics can prove useful in many workflows. In fact, Python contains several high level wrappers for processing and parsing text information.
+          </p>
+          <p>
+            We can split text based on some matching character. Consider the example below. We have a sentence which is considered a single data type. We can treat it as a list of individual characters, including special characters like whitespaces and line seperators. We could also parse out the sentences contained therein based on punctuation. Given those sentences, we can parse out some words and build a vocabulary of unique words using the <code>set()</code> data structure. This is all very useful for learning some statistics of text-based data.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  text = "This is an example of string data in Python. This is another sentence."
+  print(len(text))  # Strings are just arrays of characters
+
+  text = text.lower()  # Make all letters lowercase. Use the .toupper() method for uppercase
+  print(text)
+
+  sentences = text.split('. ')  # How many sentences were parsed?
+  print(sentences)
+
+  words = []
+  for sentence in sentences:
+      words.extend(sentence.split(' '))  # Add each word to a list
+  vocab = set(words)  # Creating a vocabulary of words from our sentences
+  print(len(vocab))
+            </code>
+          </pre>
+          <p>
+            Maybe we need to clean up some text data. In this case, we can use methods such as <code>.strip()</code> method to remove all leading and trailing whitespaces. The <code>.replace()</code> method is useful for normalizing text data. Let's say some of the data has a bunch of phone numbers in different formats. We could use this method and several others to standardize the data into a consistent format. Notice how we can chain several methods and indexers in a single line of code. We also take advantage of list concatenation to append substrings together.
+          </p>
+          <pre class="prettyprint">
+            <code>
+  raw_phone_numbers = [
+      '111-234-4896    ',
+      '  222.333-4456',
+      '333 999.9999 '
+  ]
+
+  # Desired Format: (###) ###-####
+
+  clean_phone_numbers = []
+  for nmbr in raw_phone_numbers:
+      area_code = nmbr.strip()[:3]  # First 3 characters (no leading whitespace)
+      number = nmbr.strip()[-8:].replace('.', '-')  # Last 8 characters (no trailing whitespace)
+      clean_phone_numbers.append('(' + area_code + ') ' + number)
+  print(clean_phone_numbers)
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="imports">
+          <hr>
+          <h3>Modules and Packages</h3>
+          <p class="lead">When base Python just isn't enough</p>
+          <p>
+            Python was designed to be "batteries included" meaning it has a lot of built-in functionality. Likewise, there is a plethora of third-party software packages freely available and open-source that can also be leveraged if installed. Most of this additional functionality has to be referenced explicitely with what is called an <code>import</code> statement. Take for example the Python Data Analysis Library, or Pandas. If installed in your Python environment, you need to access it as such: <code>import pandas as pd</code>.
+          </p>
+          <p>
+            After this line, you have access to all of its functionality. Note, the <code>as</code> statement aliases the package name such that you can simply use <code>pd</code> to access its contents rather than writing out the entire package name. Sometimes you only want a specific module or function from a package. We can tell Python to reference it as such: <code>from pckgname import module</code>.</p>
+          </p>
+          <pre class="prettyprint">
+            <code>
+  # Top of your script
+  import os  # Import the os module
+  import pandas as pd  # Import the Pandas library
+
+  from datetime.datetime import today()   # Import the today() function from the datetime module
+                                          # contained in the datetime package
+            </code>
+          </pre>
+        </div>
+        <div class="container-fluid" id="funcs">
+          <hr>
+          <h3>Functions and Abstraction</h3>
+          <p class="lead">Programmer are lazy, so don't repeat yourself</p>
+          <p>
+            Functions are a useful way to create blocks of code that can be easily reused throughout your scripts. One of the most common methods to define a function is using a <code>def</code> statement. This statement names the function and lists the inputs needed in parentheses, and the block of code the function will execute is indented beneath. To call a function, simply list the function's arguments, or inputs, in parentheses after the name of the function. Keep in mind that the arguments must be entered in the same order they appear in the def statement. Arguments can also be assigned default values in the function's def statement. These values will be used automatically if no arguments are entered when the function is called but give the user the flexibility to input different values if necessary.
+          </p>
+          <p>
+            When writing functions, the goal is to abstract some process such that it only needs to be implemented once but reused indefinitely. Some thought and effort should therefore be put into designing function definitions. A one-off, ad-hoc piece of code may not require abstraction, but what about a process that is executed multiple times with slight variations? In the latter case, one could <em>factor</em> out the common logic into a function. Those variations in the process would become the function arguments.
+          </p>
+          <div class="row">
+            <div class="col-4">
+              <pre class="prettyprint">
+                <code>
+  def square(x):
+      return x * x
+
+  # Call square().
+  square(2)
+                </code>
+              </pre>
+            </div>
+            <div class="col-4">
+              <pre class="prettyprint">
+                <code>
+  def exponentiate(x, power=2):
+      return x ** power
+
+  # Call exponentiate().
+  exponentiate(2, power=3)
+                </code>
+              </pre>
+            </div>
+            <div class="col-4">
+              <pre class="prettyprint">
+                <code>
+  def scale(x, scale_by=3):
+      return x * scale_by
+
+  # Call scale().
+  scale(2, scale_by=10)
+                </code>
+              </pre>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid survey">
+          <hr>
+          <p>Help us improve this content by taking <span class="link"><a href="https://docs.google.com/forms/d/e/1FAIpQLSealN9Jrld8ADu1s1AAlKP_z_FbLIVvTOMJ8TGUAb1KHrlIuQ/viewform?usp=sf_link" target="_self">this section's survey!</a></span></p>
+        </div>
+        <button onclick="toTop()" id="topButton" title="Go to Top">Top</button>
+      </div>
+
+      <!-- jQuery CDN -->
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <!-- Popper.js CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <!-- Bootstrap Js CDN -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+      <!-- jQuery Custom Scroller CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+      <!-- Code Prettify CDN -->
+      <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+      <!-- Custom JavaScript -->
+      <script src='js/sidebar.js' type="text/javascript"></script>
+      <script src='js/buttonTop.js' type="text/javascript"></script>
+    </main>
+  </body>
+</html>
